@@ -1,0 +1,32 @@
+---
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  lint:
+    uses: ./.github/workflows/lint.yml
+  case:
+    uses: ./.github/workflows/case.yml
+  build:
+    needs: [lint, case]
+    uses: ./.github/workflows/build.yml
+  release:
+    needs: build
+    name: Create Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: Release
+        uses: Consensys/github-actions/docs-release@7256f3d39c7bb71ec4ca9fc6078991302d4c8650
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SEMANTIC_RELEASE: true
