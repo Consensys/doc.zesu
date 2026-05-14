@@ -7,10 +7,9 @@ const baseUrl = isDev ? "/" : "/";
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "Consensys docs guide",
-  tagline:
-    "A template documentation site repository and contribution guidelines.",
-  url: "https://docs-template.consensys.io",
+  title: "Zesu",
+  tagline: "Stateless ZK execution client.",
+  url: "https://docs.zesu.consensys.io",
   baseUrl,
   onBrokenLinks: "throw",
   markdown: {
@@ -24,7 +23,7 @@ const config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: "Consensys", // Usually your GitHub org/user name.
-  projectName: "docs-template", // Usually your repo name.
+  projectName: "doc.zesu", // Usually your repo name.
   deploymentBranch: "gh-pages", // Github Pages deploying branch
 
   // Even if you don't use internalization, you can use this field to set useful
@@ -42,7 +41,7 @@ const config = {
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
           // Set a base path separate from default /docs
-          editUrl: "https://github.com/Consensys/docs-template/tree/main/",
+          editUrl: "https://github.com/Consensys/doc.zesu/tree/main/",
           routeBasePath: "/",
           path: "./docs",
           includeCurrentVersion: true,
@@ -122,9 +121,9 @@ const config = {
         },
       },
       navbar: {
-        title: "Consensys docs guide",
+        title: "Zesu",
         logo: {
-          alt: "Consensys logo",
+          alt: "Zesu logo",
           src: "img/logo.svg",
           srcDark: "img/logo_dark.svg",
           width: 32,
@@ -132,7 +131,7 @@ const config = {
         },
         items: [
           {
-            href: "https://github.com/Consensys/docs-template",
+            href: "https://github.com/Consensys/zesu",
             className: "header-github-link",
             position: "right",
           },
@@ -147,54 +146,42 @@ const config = {
         style: "dark",
         links: [
           {
-            title: "Consensys developer docs",
+            title: "Docs",
             items: [
               {
-                label: "Overview",
+                label: "Introduction",
                 to: "/",
               },
               {
-                label: "Contribute to the docs",
-                to: "/contribute",
+                label: "Get started",
+                to: "/get-started/system-requirements",
               },
               {
-                label: "Create a new doc site",
-                to: "/create",
+                label: "Concepts",
+                to: "/concepts/architecture",
               },
               {
-                label: "Configure advanced features",
-                to: "/configure",
+                label: "Reference",
+                to: "/reference/cli-options",
               },
             ],
           },
           {
-            title: "Consensys doc sites",
+            title: "Code",
             items: [
               {
-                label: "Teku",
-                href: "https://docs.teku.consensys.net/",
+                label: "Zesu",
+                href: "https://github.com/Consensys/zesu",
               },
               {
-                label: "MetaMask",
-                href: "https://docs.metamask.io/",
-              },
-              {
-                label: "Infura",
-                href: "https://docs.infura.io/",
-              },
-              {
-                label: "See full list",
-                to: "/#list-of-documentation-sites",
+                label: "besu-zkevm-plugin",
+                href: "https://github.com/Consensys/besu-zkevm-plugin",
               },
             ],
           },
           {
             title: "Community",
             items: [
-              {
-                label: "Consensys documentation GitHub",
-                href: "https://github.com/Consensys/docs-template",
-              },
               {
                 label: "Consensys Discord",
                 href: "https://discord.com/invite/consensys",
