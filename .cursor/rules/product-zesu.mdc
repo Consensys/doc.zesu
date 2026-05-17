@@ -1,0 +1,57 @@
+---
+description: Product-specific guidance for Zesu documentation, including scope, content areas, and reference conventions.
+globs: ["docs/**/*.md", "docs/**/*.mdx"]
+alwaysApply: false
+---
+
+# Zesu
+
+## Scope
+
+The Zesu documentation site covers Zesu, the Consensys stateless ZK execution client. The
+documentation is a single product area (no separate trees for different deployment modes).
+
+When describing Zesu in prose, do not invent capabilities, performance characteristics, or
+component names that you have not verified against the Zesu codebase or an official Consensys
+reference. If you are uncertain about a behavior or option, flag it for review rather than
+stating it as fact.
+
+## Content organization
+
+| Folder              | Content type                                                |
+|---------------------|-------------------------------------------------------------|
+| `concepts/`         | Explanation (architecture, design decisions, how features work) |
+| `get-started/`      | Onboarding (system requirements, installation, quickstart)  |
+| `how-to/`           | How-to guides (configure and operate Zesu)                  |
+| `reference/`        | Reference material (CLI options and other lookups)          |
+| `troubleshooting.md`| Top-level page listing common problems and fixes            |
+
+Follow the structural expectations in `content-types.mdc` for each folder.
+
+## Reference conventions
+
+### CLI options
+
+The format for `docs/reference/cli-options.md` is not yet defined. When the first batch of
+options is added, the documentation team should agree on a convention (for example, heading
+style, parameter format, whether to show defaults and environment variable equivalents) and
+update this rule with the chosen format. Until then, do not invent a convention; ask the
+documentation team before adding entries.
+
+## Configuration examples
+
+Whether Zesu supports a configuration file (and, if so, in what format) has not been documented
+here. Do not invent a configuration file format or assume one exists.
+
+When configuration patterns are confirmed, update this section to describe them. Until then,
+the only universally applicable rule is:
+
+- Always include a language tag on code blocks (for example, `bash`, `toml`, `yaml`, `json`).
+
+## Sidebar
+
+The sidebar is **manually defined** in `sidebars.js`. When adding a new page, add its ID to the
+correct category in `sidebars.js` in the same PR. The page ID is the path under `docs/` without
+the file extension (for example, `how-to/configure`).
+
+See `contributor-workflow.mdc` for the full sidebar update workflow.
