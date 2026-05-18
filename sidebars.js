@@ -25,7 +25,7 @@ const sidebars = {
     },
     {
       type: "category",
-      label: "How-to",
+      label: "How to",
       collapsed: false,
       items: [
         "how-to/configure",
