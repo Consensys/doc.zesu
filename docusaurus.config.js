@@ -265,6 +265,28 @@ const config = {
     //     },
     //   },
     // ],
+    [
+      "docusaurus-plugin-llms",
+      {
+        docsDir: "docs",
+        generateLLMsTxt: true,
+        generateLLMsFullTxt: true,
+        title: "Zesu documentation",
+        description:
+          "Official Zesu documentation: getting started, concepts, configuration, and CLI reference for the Consensys stateless ZK execution client.",
+        excludeImports: true,
+        removeDuplicateHeadings: true,
+        logLevel: process.env.CI ? "quiet" : "normal",
+        includeOrder: [
+          "index.md",
+          "get-started/**/*",
+          "concepts/**/*",
+          "how-to/**/*",
+          "reference/**/*",
+          "troubleshooting.md",
+        ],
+      },
+    ],
   ],
   themes: [
     [
