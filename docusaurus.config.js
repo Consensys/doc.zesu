@@ -106,6 +106,14 @@ const config = {
 
       //   // ... other Algolia params
       // },
+      announcementBar: {
+        id: "announcement_bar",
+        content:
+          "Zesu and its specifications are actively evolving. Details in this documentation may change without notice.",
+        backgroundColor: "#fafbfc",
+        textColor: "#091E42",
+        isCloseable: false,
+      },
       colorMode: {
         defaultMode: "light",
         disableSwitch: false,
