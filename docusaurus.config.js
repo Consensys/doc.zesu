@@ -109,9 +109,9 @@ const config = {
       announcementBar: {
         id: "announcement_bar",
         content:
-          "Zesu and its specifications are actively evolving. Details in this documentation may change without notice.",
-        backgroundColor: "#fafbfc",
-        textColor: "#091E42",
+          "<b>Zesu and its specifications are actively evolving. Details in this documentation may change without notice.</b>",
+        backgroundColor: "#FFF3CD",
+        textColor: "#664D03",
         isCloseable: false,
       },
       colorMode: {
