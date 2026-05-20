@@ -1,6 +1,56 @@
 ---
 title: Witness retrieval
-description: How Zesu retrieves execution witnesses from an execution-layer client.
+description: What an execution witness is, why Zesu needs one, and how Zesu retrieves it from an execution client.
+keywords:
+  [
+    execution witness,
+    witness retrieval,
+    stateless execution,
+    debug_executionWitness,
+    zesu,
+    zkVM,
+  ]
 ---
 
-# Witness retrieval
+:::caution
+The execution witness specification is still being finalised and the retrieval method
+described here will likely change.
+:::
+
+An execution witness is a record of the chain state that Zesu needs to re-execute a block's
+transactions.
+Instead of holding the full chain state, Zesu receives a witness for each block and uses it
+to re-execute the block without access to the broader state.
+
+## Why Zesu needs a witness
+
+An execution client that holds the full chain state can load whatever a block needs at
+execution time.
+Zesu doesn't hold any chain state of its own, and to re-execute a block correctly, it needs a
+pre-assembled record of exactly the state that block touches.
+That record is the witness.
+
+The connected execution client produces the witness as part of executing each block.
+It captures the state entries the block reads and modifies, packages them into the witness,
+and makes the witness available to Zesu alongside the block header and body.
+
+## Witness vs proof
+
+The witness and the proof serve different roles in the pipeline:
+
+|              | Witness                       | Proof                      |
+|--------------|-------------------------------|----------------------------|
+| Role         | Input to Zesu's execution     | Output of Zesu's execution |
+| Size         | Megabytes                     | Kilobytes                  |
+| Consumer     | Zesu (the prover)             | Verifiers                  |
+| Distribution | Stays local to the prover     | Distributed to verifiers   |
+
+The witness is an intermediate artifact that doesn't travel beyond the prover.
+The proof is the compact, distributable certificate that verifiers use to confirm correct
+block execution.
+
+## How Zesu retrieves a witness
+
+Zesu polls a connected execution client for each block's header, body, and witness.
+For example, when connecting to Besu, Zesu retrieves witnesses from a `debug_executionWitness` RPC
+endpoint, provided by the [`besu-zkevm-plugin`](https://github.com/Consensys/besu-zkevm-plugin).
