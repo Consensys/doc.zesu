@@ -15,6 +15,7 @@ listed on the right unless they appear in code, URLs, or direct quotations from 
 |---------------|---------------------------------------------------------|
 | Zesu          | zesu, ZESU (except in code/URLs/CLI)                    |
 | Consensys     | ConsenSys, consensys (except in code/URLs)              |
+| Zig           | zig, ZIG (except in code/URLs)                          |
 
 Zesu-specific technical terminology (for example, terms related to ZK proofs, statelessness, or
 witnesses) is not yet documented here. Add entries to this file as the team agrees on the

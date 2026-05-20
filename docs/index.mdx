@@ -1,0 +1,80 @@
+---
+title: Introduction
+description: Introduction to Zesu, the stateless execution client that generates block-validation proofs for EVM-compatible chains.
+slug: /
+keywords:
+  [
+    zesu,
+    stateless execution client,
+    zkEVM,
+    block-validation proofs,
+    EVM execution proofs,
+    zkVM,
+    stateless EVM,
+    Ethereum zkEVM,
+  ]
+---
+
+import CardList from '@site/src/components/CardList'
+
+# Introduction
+
+Zesu is a standalone stateless execution client, written in Zig, that generates
+block-validation proofs for EVM-compatible chains.
+Run inside a zero-knowledge virtual machine (zkVM), it re-executes blocks without holding local chain state and produces proofs
+that verifiers can check to confirm correct block execution without re-processing any
+transactions.
+
+![Diagram showing an execution client passing block data and a witness to Zesu running inside a zkVM, which produces a block-validation proof for a verifier](/img/overview.png)
+
+## Why Zesu exists
+
+Re-executing every transaction in a block is computationally expensive.
+Block-validation proofs offer an alternative: a verifier can confirm correct block execution
+by checking a compact cryptographic proof, without re-processing any transactions.
+
+Zesu produces those proofs.
+The same proving capability applies to other networks that require EVM execution proofs.
+
+## How Zesu works
+
+Zesu retrieves block data and an execution witness from an execution client that holds the
+full chain state, then re-executes the block inside a zkVM which produces a proof that the execution
+was correct.
+
+See [Architecture](./concepts/architecture.mdx) for how Zesu fits into the broader pipeline,
+and [Witness retrieval](./concepts/witness-retrieval.mdx) for how Zesu obtains the data it
+needs.
+
+## Use cases
+
+- **Ethereum L1 zkEVM proving**: Provers run Zesu to prove Ethereum mainnet block execution.
+Provers are a distinct role in the network, separate from validators and block builders.
+
+- **L2 rollups**: L2 networks that require EVM execution proofs can use Zesu as their stateless execution
+client inside a zkVM.
+
+- **Private and consortium networks**: Private EVM networks can use Zesu to produce execution proofs
+for lightweight validators, without requiring every participant to hold or re-process full chain state.
+
+## Next steps
+
+<CardList
+  items={[
+    {
+      href: '/get-started/system-requirements',
+      title: 'System requirements',
+      description: 'Check the hardware and software requirements before installing Zesu.',
+    },
+    {
+      href: '/get-started/quickstart',
+      title: 'Quickstart',
+      description: 'Run Zesu against a Besu node end-to-end in a few steps.',
+    },
+    {
+      href: '/concepts/architecture',
+      title: 'Architecture',
+      description: 'Understand how Zesu fits into the zkEVM pipeline and how its components interact.',
+    },
+  ]}
+/>
