@@ -1,10 +1,11 @@
 ---
 title: Introduction
-description: Introduction to Zesu, the stateless execution client that generates block-validation proofs for EVM-compatible chains.
+description: Introduction to Zesu, the stateless EVM block executor that generates block-validation proofs for EVM-compatible chains.
 slug: /
 keywords:
   [
     zesu,
+    zig,
     stateless execution client,
     zkEVM,
     block-validation proofs,
@@ -12,6 +13,8 @@ keywords:
     zkVM,
     stateless EVM,
     Ethereum zkEVM,
+    L2 rollups,
+    EVM-compatible,
   ]
 ---
 
@@ -19,13 +22,14 @@ import CardList from '@site/src/components/CardList'
 
 # Introduction
 
-Zesu is a standalone stateless execution client, written in Zig, that generates
-block-validation proofs for EVM-compatible chains.
-Run inside a zero-knowledge virtual machine (zkVM), it re-executes blocks without holding local chain state and produces proofs
-that verifiers can check to confirm correct block execution without re-processing any
+Zesu is a stateless EVM block executor, written in Zig and designed to run as a zkVM guest
+program.
+It re-executes blocks without holding local chain state and produces block-validation proofs
+that verifiers can use to confirm correct block execution without re-processing any
 transactions.
 
-![Diagram showing an execution client passing block data and a witness to Zesu running inside a zkVM, which produces a block-validation proof for a verifier](/img/overview.png)
+![Diagram showing an execution client passing block data and a witness to Zesu running inside a
+zkVM, which produces a block-validation proof for a verifier](/img/overview.png)
 
 ## Why Zesu exists
 
@@ -38,9 +42,9 @@ The same proving capability applies to other networks that require EVM execution
 
 ## How Zesu works
 
-Zesu retrieves block data and an execution witness from an execution client that holds the
-full chain state, then re-executes the block inside a zkVM which produces a proof that the execution
-was correct.
+Zesu receives an SSZ-encoded block bundle (execution payload and witness) from an execution
+client that holds the full chain state, then re-executes the block inside a zkVM to produce a
+proof that the execution was correct.
 
 See [Architecture](./concepts/architecture.mdx) for how Zesu fits into the broader pipeline,
 and [Witness retrieval](./concepts/witness-retrieval.mdx) for how Zesu obtains the data it
