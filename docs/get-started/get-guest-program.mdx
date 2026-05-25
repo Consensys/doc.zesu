@@ -1,0 +1,47 @@
+---
+title: Obtain the guest program
+sidebar_label: Obtain the guest program
+description: Where to get the Zesu zkVM guest program artifact and how to integrate it into a zkVM host.
+keywords:
+  [
+    zesu,
+    zkVM,
+    guest program,
+    ELF,
+    rv64im,
+    zesu.rv64im.o,
+    GitHub Releases,
+    integrate,
+  ]
+---
+
+Zesu is distributed as a pre-built relocatable Executable and Linkable Format (ELF)
+object, `zesu.rv64im.o`.
+To use it, your zkVM platform needs to provide implementations of the platform-specific
+functions Zesu depends on, then link them together to produce a runnable guest binary.
+
+## Prerequisites
+
+- A zkVM that targets the `rv64im` (RISC-V 64-bit base integer with multiply extension)
+  instruction set.
+
+## Download the artifact
+
+[Download](https://github.com/Consensys/zesu/releases) the pre-built `zesu.rv64im.o`
+artifact for the release you want to integrate.
+
+## Integrate the artifact
+
+Your zkVM host integration implements the platform-specific functions and links them
+against `zesu.rv64im.o` to produce the final guest binary your zkVM runs.
+
+The [zkVM symbol reference](../reference/zkvm-symbols.mdx) contains complete tables of the IO,
+runtime, and accelerator symbols the host object must implement.
+
+## Next steps
+
+- [Architecture](../concepts/architecture.mdx): the full proving pipeline and why the ELF
+  design was chosen.
+- [zkVM symbol reference](../reference/zkvm-symbols.mdx): complete tables of the IO,
+  runtime, and accelerator symbols the host object must implement.
+
