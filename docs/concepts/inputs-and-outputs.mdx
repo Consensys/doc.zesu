@@ -1,0 +1,110 @@
+---
+title: Inputs and outputs
+description: The stateless input Zesu consumes and the validation result it produces, as defined by EIP-8025.
+keywords:
+  [
+    stateless input,
+    StatelessInput,
+    StatelessValidationResult,
+    execution proof,
+    EIP-8025,
+    public output,
+    zesu,
+    zkVM,
+  ]
+---
+
+:::caution
+[Ethereum Improvement Proposal 8025 (EIP-8025)](https://github.com/frisitano/EIPs/blob/d5653bc4d9b86997e069567dcd1eb8766b0c8a55/EIPS/eip-8025.md)
+is in Draft status. The inputs and outputs described here may change as the spec
+evolves.
+:::
+
+Zesu runs as a guest program inside a zkVM and has a defined contract for what it
+consumes and what it returns.
+That contract is defined by EIP-8025, which proposes optional execution proofs for the
+Ethereum consensus layer.
+The contract spans three integration points. Execution clients produce the input, zkVM
+hosts pass it to Zesu, and verifiers read the output to confirm proof validity.
+
+![Diagram of Zesu's input/output contract: private StatelessInput enters on the left,
+Zesu processes it inside a zkVM, and public output plus proof exit on the right](/img/inputs-outputs.png)
+
+## The stateless input
+
+Zesu consumes a single SSZ-encoded structure called the stateless input.
+
+```python
+class StatelessInput:
+    new_payload_request: NewPayloadRequest
+    witness: ExecutionWitness
+    chain_config: ChainConfig
+    public_keys: Tuple[Bytes, ...]
+```
+
+The four fields play distinct roles:
+
+- `new_payload_request` is the Engine API payload data supplied by the consensus client.
+  It includes the execution payload, blob versioned hashes, parent beacon block root, and
+  typed execution requests (deposits, withdrawals, consolidations).
+- `witness` is the chain state Zesu needs to re-execute the payload's transactions without
+  holding local state. See [Witness retrieval](./witness-retrieval.mdx) for details.
+- `chain_config` pins the chain ID and fork configuration the guest validates against.
+- `public_keys` contains one 65-byte uncompressed secp256k1 public key for each
+  transaction signer, in transaction order.
+
+The input is "private" in the proof-system sense. The node running Zesu supplies it, but
+verifiers don't see it.
+The zkVM proof attests only to the public output described below.
+
+## The validation result
+
+After re-executing the payload, Zesu emits a public output called the stateless validation result.
+
+```python
+class StatelessValidationResult:
+    new_payload_request_root: Hash32
+    successful_validation: bool
+    chain_config: ChainConfig
+```
+
+The Zesu commitment simplifies `StatelessValidationResult` by including only `chain_id`
+rather than the full `chain_config`.
+Zesu serialises this as a 41-byte SSZ commitment:
+
+| Bytes      | Field                      | Description                                     |
+|------------|----------------------------|-------------------------------------------------|
+| `[0..32]`  | `new_payload_request_root` | SSZ `hash_tree_root` of the `NewPayloadRequest` |
+| `[32..40]` | `chain_id`                 | Chain ID as a little-endian `uint64`            |
+| `[40]`     | `successful_validation`    | `0x01` for success, `0x00` for failure          |
+
+Each field serves a verification role.
+
+- `new_payload_request_root` binds the proof to a specific payload. A verifier recomputes
+  the hash from the payload it expects to validate and rejects the proof if the roots
+  don't match.
+- `chain_id` tells the verifier which chain the proof applies to.
+- `successful_validation` reports whether block execution succeeded.
+
+A proof-verifying node accepts the proof only when the proof itself verifies for the
+expected guest program, `successful_validation` is `0x01`, and both the request root and
+chain ID match what the verifier expects.
+
+## Why the contract matters
+
+Keeping the input private and the output public is what makes stateless verification
+possible.
+A verifier doesn't need the chain state or the witness to check a proof.
+It needs the proof, the public commitment, and a copy of the `NewPayloadRequest` to
+verify the binding.
+
+Each integration point relies on a different part of this split.
+
+- **Execution clients** that produce witnesses need to populate every field of the
+  stateless input correctly. A malformed witness or mismatched chain configuration causes
+  the guest to return `successful_validation = false`.
+- **zkVM hosts** that run Zesu pass the serialised stateless input as private input and
+  surface the 41-byte commitment as public output. The zkVM's symbol ABI for `read_input`
+  and `write_output` mediates this exchange.
+- **Verifiers** read only the public output and use it to bind a proof to a specific
+  payload before treating that proof as evidence of valid execution.
