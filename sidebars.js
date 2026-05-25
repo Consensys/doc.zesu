@@ -20,6 +20,7 @@ const sidebars = {
       collapsed: false,
       items: [
         "concepts/architecture",
+        "concepts/inputs-and-outputs",
         "concepts/witness-retrieval",
       ],
     },
