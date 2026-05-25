@@ -15,6 +15,10 @@ keywords:
 :::caution
 The execution witness specification is still being finalised and the retrieval method
 described here will likely change.
+
+Longer-term proposals would deliver witnesses over the Engine API alongside block payloads.
+See [execution-apis #741](https://github.com/ethereum/execution-apis/issues/741) and
+[#773](https://github.com/ethereum/execution-apis/pull/773) for the latest proposals.
 :::
 
 An execution witness is a record of the chain state that Zesu needs to re-execute a block's
@@ -31,8 +35,8 @@ pre-assembled record of exactly the state that block touches.
 That record is the witness.
 
 The connected execution client produces the witness as part of executing each block.
-It captures the state entries the block reads and modifies, packages them into the witness,
-and makes the witness available to Zesu alongside the block header and body.
+It captures the pre-state values of every account and storage slot that the block's transactions
+access, packages them into the witness, and makes the witness available to Zesu.
 
 ## Witness vs proof
 
@@ -51,6 +55,9 @@ block execution.
 
 ## How Zesu retrieves a witness
 
-Zesu polls a connected execution client for each block's header, body, and witness.
-For example, when connecting to Besu, Zesu retrieves witnesses from a `debug_executionWitness` RPC
-endpoint, provided by the [`besu-zkevm-plugin`](https://github.com/Consensys/besu-zkevm-plugin).
+Zesu accepts a witness as part of an SSZ-encoded stateless block bundle (`SszStatelessInput`),
+which combines the execution payload and the witness into a single input.
+This is the canonical format for passing data to Zesu when it runs inside a zkVM.
+
+In the current devnet setup, Zesu connects to a Besu node and retrieves block data and witnesses
+from the `debug_executionWitness` RPC endpoint.
