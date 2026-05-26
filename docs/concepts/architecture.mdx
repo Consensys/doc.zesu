@@ -1,6 +1,107 @@
 ---
 title: Architecture
-description: High-level architecture of Zesu and how it fits into the L1 zkEVM pipeline.
+description: How Zesu fits into the zkVM proving pipeline and why it is built as a relocatable ELF object.
+keywords:
+  [
+    zesu,
+    architecture,
+    zkVM,
+    ELF,
+    rv64im,
+    relocatable,
+    execution proof,
+    EIP-8025,
+  ]
 ---
 
-# Architecture
+Zesu is a stateless EVM block executor designed to run as a guest program inside a
+zero-knowledge virtual machine (zkVM).
+This page explains how Zesu fits into the end-to-end proving pipeline and why it is
+structured as a relocatable ELF object rather than a zkVM-specific binary.
+
+## The proving pipeline
+
+At a high level, the pipeline has three stages.
+
+**Stage 1: Witness assembly**
+
+A stateful execution client executes or re-executes a block while recording the account,
+storage, code, and ancestor-header data that the block's transactions access.
+It packages this data into an execution witness and makes it available to the prover node.
+See [Witness retrieval](./witness-retrieval.mdx) for how Zesu retrieves the witness.
+
+**Stage 2: Guest execution**
+
+The prover node runs Zesu as a guest program inside a zkVM.
+Zesu receives a `StatelessInput` bundle via the zkVM's `read_input` interface, re-executes
+the block against the witness, and emits a 41-byte public commitment via `write_output`.
+The zkVM then produces a proof that Zesu executed correctly.
+See [Inputs and outputs](./inputs-and-outputs.mdx) for the full I/O contract.
+
+**Stage 3: Proof distribution**
+
+The prover node wraps the proof and the public commitment into an `ExecutionProof`, signs
+it, and broadcasts it over the consensus layer p2p network as a `SignedExecutionProof`
+message on the `execution_proof` gossip topic, as defined by
+[EIP-8025](https://github.com/frisitano/EIPs/blob/d5653bc4d9b86997e069567dcd1eb8766b0c8a55/EIPS/eip-8025.md).
+Proof-verifying nodes receive it via gossip and use the public commitment to confirm the
+proof covers the expected payload.
+
+![Diagram showing an execution client passing block data and a witness to Zesu running
+inside a zkVM, which produces a block-validation proof for a verifier](/img/overview.png)
+
+## The relocatable ELF design
+
+Zesu is compiled as a relocatable `rv64im` Executable and Linkable Format (ELF) object
+named `zesu.rv64im.o`.
+`rv64im` is the RISC-V 64-bit base integer instruction set with the integer multiply
+extension, which most zkVMs target.
+
+All EVM and stateless execution logic lives in this single object.
+Platform-specific behaviour (IO, memory management, logging, and cryptographic
+acceleration) is left as unresolved extern symbol references.
+Each zkVM host provides a host object that satisfies these references using
+platform-native circuits or software fallbacks, then links it against `zesu.rv64im.o`
+to produce the final guest binary.
+
+This design decouples EVM logic from zkVM specifics at the ELF/ABI level.
+Adding support for a new zkVM requires only a new host object that satisfies the symbol
+contract; the EVM implementation itself does not change.
+
+Pre-built `zesu.rv64im.o` artifacts are published as
+[GitHub Releases](https://github.com/Consensys/zesu/releases) so zkVM hosts can integrate
+Zesu without a source dependency on this repository.
+
+See [Obtain the guest program](../get-started/get-guest-program.mdx) for download and
+integration steps.
+
+## The symbol contract
+
+The extern references that zkVM hosts must satisfy fall into three categories.
+
+**IO**: how the host passes the `StatelessInput` to Zesu and receives the public
+commitment back. The two IO symbols (`read_input` and `write_output`) are the only channel
+between the guest and the host at runtime.
+
+**Runtime**: execution environment support: logging, process termination, and the bump
+heap allocator's position and upper-bound variables. These let Zesu operate in a
+freestanding environment without an operating system.
+
+**Accelerators**: EVM precompile operations (keccak256, secp256k1 recovery, BN254
+pairings, and so on) delegated to zkVM-native circuits rather than computed in software.
+Hardware-accelerated precompiles reduce proof cost significantly for computationally
+expensive EVM operations.
+
+See [zkVM symbol reference](../reference/zkvm-symbols.mdx) for the full symbol tables
+including signatures and descriptions.
+
+## Next steps
+
+- [Obtain the guest program](../get-started/get-guest-program.mdx): download and
+  integration steps for zkVM hosts.
+- [Inputs and outputs](./inputs-and-outputs.mdx): the `StatelessInput` structure and the
+  41-byte public commitment.
+- [Witness retrieval](./witness-retrieval.mdx): how Zesu obtains the witness it needs to
+  re-execute a block.
+- [zkVM symbol reference](../reference/zkvm-symbols.mdx): complete tables of IO, runtime,
+  and accelerator symbols that zkVM hosts must implement.

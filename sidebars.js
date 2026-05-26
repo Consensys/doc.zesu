@@ -10,7 +10,7 @@ const sidebars = {
       collapsed: false,
       items: [
         "get-started/system-requirements",
-        "get-started/install",
+        "get-started/get-guest-program",
         "get-started/quickstart",
       ],
     },
@@ -38,6 +38,7 @@ const sidebars = {
       collapsed: false,
       items: [
         "reference/cli-options",
+        "reference/zkvm-symbols",
       ],
     },
     "troubleshooting",
