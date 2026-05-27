@@ -1,6 +1,162 @@
 ---
 title: CLI options
-description: Reference for Zesu's command-line options.
+description: Command-line options, environment variables, output streams, and exit codes for the native Zesu binary.
+keywords:
+  [
+    zesu,
+    CLI,
+    command line,
+    options,
+  ]
 ---
 
-# CLI options
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+This reference describes the command-line interface of the native `zesu` binary.
+You can [install the native binary](../get-started/install-native.mdx) and build it from
+source to:
+
+- Debug a failing block.
+- Validate a zkVM integration's commitment against a known-correct value.
+
+## Specify options
+
+You can specify Zesu options on the command line:
+
+```bash
+zesu [OPTIONS]
+```
+
+The binary reads one environment variable, [`ZESU_INPUT`](#environment-variables),
+which controls where it reads input bytes from when no input flag is provided.
+
+## Options
+
+### `fork`
+
+<Tabs>
+
+<TabItem value="Syntax" label="Syntax" default>
+
+```bash
+--fork <NAME>
+```
+
+</TabItem>
+
+<TabItem value="Example" label="Example">
+
+```bash
+--fork Prague
+```
+
+</TabItem>
+
+</Tabs>
+
+Overrides the fork name declared in the input's
+[`chain_config`](../concepts/inputs-and-outputs.mdx#the-stateless-input).
+
+### `ssz`
+
+<Tabs>
+
+<TabItem value="Syntax" label="Syntax" default>
+
+```bash
+--ssz [<FILE>]
+```
+
+</TabItem>
+
+<TabItem value="Example" label="Example">
+
+```bash
+--ssz ./block.bin
+```
+
+</TabItem>
+
+</Tabs>
+
+Reads SSZ-encoded input from a binary file.
+If supplied without an argument, Zesu falls back to standard input or
+[`ZESU_INPUT`](#environment-variables).
+
+### `json`
+
+<Tabs>
+
+<TabItem value="Syntax" label="Syntax" default>
+
+```bash
+--json <BLOCK_FILE> <WITNESS_FILE>
+```
+
+</TabItem>
+
+<TabItem value="Example" label="Example">
+
+```bash
+--json ./block.json ./witness.json
+```
+
+</TabItem>
+
+</Tabs>
+
+Reads input from two JSON files, one containing the block and one containing
+the witness.
+Both arguments are required.
+
+The binary accepts two formats for each file:
+
+| File         | Accepted formats                                                                                            |
+|--------------|-------------------------------------------------------------------------------------------------------------|
+| Block file   | `{"result":"0x<rlp>"}` (raw `debug_getRawBlock` response) or `{"block":"0x<rlp>"}`                          |
+| Witness file | `{"state":[...],"codes":[...],"keys":[...],"headers":[...]}` (direct) or `{"jsonrpc":"2.0","result":{...}}` |
+
+## Environment variables
+
+### `ZESU_INPUT`
+
+<Tabs>
+
+<TabItem value="Syntax" label="Syntax" default>
+
+```bash
+ZESU_INPUT=<FILE>
+```
+
+</TabItem>
+
+<TabItem value="Example" label="Example">
+
+```bash
+ZESU_INPUT=./block.bin zesu
+```
+
+</TabItem>
+
+</Tabs>
+
+Path to a file containing SSZ-encoded input bytes.
+Used only when no [`--ssz`](#ssz) or [`--json`](#json) flag is present on the
+command line.
+If `ZESU_INPUT` is not set, Zesu reads from standard input.
+
+## Output streams
+
+Zesu writes its public output (the 41-byte SSZ commitment, or the JSON summary
+for [`--json`](#json) input) to standard output.
+Diagnostic messages go to standard error.
+See [Inputs and outputs](../concepts/inputs-and-outputs.mdx) for the output
+format.
+
+## Exit codes
+
+| Code | Meaning                                                                                                                                                              |
+|------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `0`  | Block executed successfully and the post-state root and receipts root match the expected values.                                                                     |
+| `1`  | Argument parsing failed, the input could not be loaded, execution returned an error, or the resulting state root or receipts root did not match the expected values. |
