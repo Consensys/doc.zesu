@@ -9,9 +9,9 @@ const sidebars = {
       label: "Get started",
       collapsed: false,
       items: [
-        "get-started/system-requirements",
         "get-started/get-guest-program",
         "get-started/quickstart",
+        "get-started/install-native",
       ],
     },
     {

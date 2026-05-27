@@ -1,0 +1,101 @@
+---
+title: Install the native Zesu binary
+description: Install build prerequisites and compile the native Zesu binary that runs Ethereum block execution on your host CPU.
+keywords:
+  [
+    zesu,
+    install,
+    build,
+    native binary,
+    Zig,
+    macOS,
+    Linux,
+  ]
+---
+
+Zesu builds as a native binary that runs the same Ethereum block execution
+logic as the zkVM guest, on your host CPU.
+You can use the native binary to debug a failing block, or validate a zkVM
+integration's commitment against a known-correct value.
+
+:::note Early access warning
+Build prerequisites, flags, and behaviour can change between releases.
+Verify against the upstream [`Consensys/zesu`](https://github.com/Consensys/zesu)
+repository if anything on this page looks out of date.
+:::
+
+## Prerequisites
+
+Before you start, ensure you have:
+
+- macOS or a Debian-based Linux distribution (for example, Ubuntu or Debian).
+  Other Linux distributions are not covered by the supplied install scripts.
+- [Zig](https://ziglang.org/) version 0.16.0 or later.
+- Native cryptographic libraries:
+  - [`libsecp256k1`](https://github.com/bitcoin-core/secp256k1) for secp256k1
+    signature operations.
+  - [`libblst`](https://github.com/supranational/blst) for BLS12-381 operations.
+  - [`libmcl`](https://github.com/herumi/mcl) for BN254 and BLS12-381 pairings.
+
+`make install-deps` installs the cryptographic libraries for you on supported
+platforms.
+
+## Clone the Zesu repository
+
+```bash
+git clone https://github.com/Consensys/zesu.git
+cd zesu
+```
+
+## Install build dependencies
+
+On macOS or a Debian-based Linux distribution, install all the cryptographic
+libraries with:
+
+```bash
+make install-deps
+```
+
+To verify the dependencies are already satisfied without installing anything:
+
+```bash
+make check-deps
+```
+
+If you are on a different operating system, install `libsecp256k1`, `libblst`,
+and `libmcl` using your platform's package manager or by building each from
+source, then run `make check-deps` to confirm.
+
+## Build the binary
+
+From the repository root:
+
+```bash
+zig build
+```
+
+The native Zesu binary is available at `./zig-out/bin/zesu`.
+
+:::note
+The build also produces additional binaries that are not covered by this page. Review the
+[`Consensys/zesu`](https://github.com/Consensys/zesu) repository for the
+full list.
+:::
+
+## Verify the build
+
+Confirm the binary built successfully:
+
+```bash
+ls -l ./zig-out/bin/zesu
+```
+
+For the full list of command-line options the binary accepts, see
+[CLI options](../reference/cli-options.mdx).
+
+## Next steps
+
+- [CLI options](../reference/cli-options.mdx): every flag, environment variable,
+  and exit code the binary supports.
+- [Inputs and outputs](../concepts/inputs-and-outputs.mdx): the input formats
+  the binary accepts and the 41-byte commitment it produces.

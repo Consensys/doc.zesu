@@ -57,6 +57,22 @@ The input is "private" in the proof-system sense. The node running Zesu supplies
 verifiers don't see it.
 The zkVM proof attests only to the public output described below.
 
+## How Zesu receives the input
+
+The wire format for the stateless input is SSZ. How those bytes reach Zesu is up to the
+host:
+
+- **zkVM hosts** place the SSZ bytes in a memory-mapped input region the guest reads
+  through the `read_input` symbol. See
+  [zkVM symbols](../reference/zkvm-symbols.mdx) for the symbol contract.
+- **The native binary** reads the SSZ bytes from a file or from standard input. See
+  [CLI options](../reference/cli-options.mdx) for the exact flags and precedence.
+
+The native binary additionally accepts a JSON development format (one file for the block,
+one for the witness) that deserialises into the same `StatelessInput` structure.
+The JSON format is a development convenience for cases where SSZ-encoded inputs are not
+available; it is not part of the EIP-8025 contract.
+
 ## The validation result
 
 After re-executing the payload, Zesu emits a public output called the stateless validation result.
