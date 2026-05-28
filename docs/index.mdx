@@ -11,6 +11,7 @@ keywords:
     block-validation proofs,
     EVM execution proofs,
     zkVM,
+    RISC-V,
     stateless EVM,
     Ethereum zkEVM,
     L2 rollups,
@@ -24,12 +25,12 @@ import CardList from '@site/src/components/CardList'
 
 Zesu is a stateless EVM block executor, written in Zig and designed to run as a zkVM guest
 program.
-It re-executes blocks without holding local chain state and produces block-validation proofs
-that verifiers can use to confirm correct block execution without re-processing any
-transactions.
+It re-executes blocks without holding local chain state and runs inside a zkVM that produces
+block-validation proofs verifiers can use to confirm correct block execution without
+re-processing any transactions.
 
 ![Diagram showing an execution client passing block data and a witness to Zesu running inside a
-zkVM, which produces a block-validation proof for a verifier](/img/overview.png)
+zkVM, which then produces a block-validation proof for a verifier](/img/overview.png)
 
 ## Why Zesu exists
 
@@ -37,14 +38,17 @@ Re-executing every transaction in a block is computationally expensive.
 Block-validation proofs offer an alternative: a verifier can confirm correct block execution
 by checking a compact cryptographic proof, without re-processing any transactions.
 
-Zesu produces those proofs.
+Zesu runs inside a zkVM that produces those proofs.
 The same proving capability applies to other networks that require EVM execution proofs.
 
 ## How Zesu works
 
 Zesu receives an SSZ-encoded block bundle (execution payload and witness) from an execution
-client that holds the full chain state, then re-executes the block inside a zkVM to produce a
-proof that the execution was correct.
+client that holds the full chain state, then re-executes the block inside a zkVM, which then
+produces a proof that the execution was correct.
+
+Zesu also builds as a native binary that runs the same execution logic on your host CPU
+without a zkVM, useful for debugging and validating zkVM integrations.
 
 See [Architecture](./concepts/architecture.mdx) for how Zesu fits into the broader pipeline,
 and [Witness retrieval](./concepts/witness-retrieval.mdx) for how Zesu obtains the data it
@@ -63,19 +67,19 @@ needs.
 <CardList
   items={[
     {
-      href: '/get-started/quickstart',
-      title: 'Quickstart',
-      description: 'Run Zesu against a Besu node end-to-end in a few steps.',
+      href: '/get-started/get-guest-program',
+      title: 'Obtain the guest program',
+      description: 'Download the Zesu guest program ELF and integrate it into your zkVM host.',
+    },
+    {
+      href: '/get-started/install-native',
+      title: 'Install the native binary',
+      description: 'Build the native Zesu binary to debug block execution and validate zkVM integrations on your host CPU.',
     },
     {
       href: '/concepts/architecture',
       title: 'Architecture',
       description: 'Understand how Zesu fits into the zkEVM pipeline and how its components interact.',
-    },
-    {
-      href: '/get-started/install-native',
-      title: 'Install the native binary',
-      description: 'Build the native Zesu binary to test and debug block execution locally.',
     },
   ]}
 />
