@@ -16,8 +16,9 @@ keywords:
 
 :::caution
 [Ethereum Improvement Proposal 8025 (EIP-8025)](https://github.com/frisitano/EIPs/blob/d5653bc4d9b86997e069567dcd1eb8766b0c8a55/EIPS/eip-8025.md)
-is in Draft status. The inputs and outputs described here may change as the spec
-evolves.
+is in Draft status; the link points to the spec author's working draft on a personal
+fork rather than the canonical [`ethereum/EIPs`](https://github.com/ethereum/EIPs)
+repository. The inputs and outputs described here may change as the spec evolves.
 :::
 
 Zesu runs as a guest program inside a zkVM and has a defined contract for what it
@@ -45,13 +46,17 @@ class StatelessInput:
 The four fields play distinct roles:
 
 - `new_payload_request` is the Engine API payload data supplied by the consensus client.
-  It includes the execution payload, blob versioned hashes, parent beacon block root, and
-  typed execution requests (deposits, withdrawals, consolidations).
+  It includes the execution payload, blob versioned hashes ([EIP-4844](https://eips.ethereum.org/EIPS/eip-4844)),
+  parent beacon block root, and typed execution requests (deposits, withdrawals,
+  consolidations).
 - `witness` is the chain state Zesu needs to re-execute the payload's transactions without
   holding local state. See [Witness retrieval](./witness-retrieval.mdx) for details.
-- `chain_config` pins the chain ID and fork configuration the guest validates against.
-- `public_keys` contains one 65-byte uncompressed secp256k1 public key for each
-  transaction signer, in transaction order.
+- `chain_config` carries the chain ID and an optional `fork_name` hint (a string such as
+  `"Prague"`) telling the guest which fork rules to apply. When `fork_name` is omitted,
+  the executor selects the fork based on the block timestamp on the mainnet schedule.
+- `public_keys` optionally contains one 64-byte uncompressed secp256k1 public key
+  (no `0x04` prefix) for each transaction signer, in transaction order. When provided,
+  the guest uses these keys instead of recovering signers from transaction signatures.
 
 The input is "private" in the proof-system sense. The node running Zesu supplies it, but
 verifiers don't see it.
