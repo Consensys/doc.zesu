@@ -23,8 +23,9 @@ See [execution-apis #741](https://github.com/ethereum/execution-apis/issues/741)
 
 An execution witness is a record of the chain state that Zesu needs to re-execute a block's
 transactions.
-Instead of holding the full chain state, Zesu receives a witness for each block and uses it
-to re-execute the block without access to the broader state.
+The execution client produces the witness; Zesu consumes it.
+Zesu doesn't hold any chain state of its own, and uses the witness to re-execute each block
+without access to the broader state.
 
 ## Why Zesu needs a witness
 
@@ -46,18 +47,23 @@ The witness and the proof serve different roles in the pipeline:
 |--------------|-------------------------------|----------------------------|
 | Role         | Input to Zesu's execution     | Output of Zesu's execution |
 | Size         | Megabytes                     | Kilobytes                  |
-| Consumer     | Zesu (the prover)             | Verifiers                  |
-| Distribution | Stays local to the prover     | Distributed to verifiers   |
+| Consumer     | Zesu                          | Verifiers                  |
+| Distribution | Local to the prover           | Distributed to verifiers   |
 
-The witness is an intermediate artifact that doesn't travel beyond the prover.
+In the current devnet setup, the witness is an intermediate artifact that doesn't travel
+beyond the prover.
 The proof is the compact, distributable certificate that verifiers use to confirm correct
 block execution.
 
-## How Zesu retrieves a witness
+## How witnesses reach Zesu
 
-Zesu accepts a witness as part of an SSZ-encoded stateless block bundle (`SszStatelessInput`),
-which combines the execution payload and the witness into a single input.
-This is the canonical format for passing data to Zesu when it runs inside a zkVM.
+Zesu receives a witness as part of an SSZ-encoded stateless block bundle
+(`SszStatelessInput`), which combines the execution payload and the witness into a single
+input.
+This is the canonical format Zesu consumes when it runs inside a zkVM.
+See [Inputs and outputs](./inputs-and-outputs.mdx) for the input structure.
 
-In the current devnet setup, Zesu connects to a Besu node and retrieves block data and witnesses
-from the `debug_executionWitness` RPC endpoint.
+The execution client supplies the block data and witness through its own interface.
+Any conversion to the SSZ format Zesu consumes happens outside Zesu.
+Witness availability is bounded by what the execution client can serve, which limits how
+far back blocks can be re-executed.
