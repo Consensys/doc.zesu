@@ -34,8 +34,8 @@ artifact for the release you want to integrate.
 
 Your zkVM host integration implements the platform-specific functions and links them
 against `zesu.rv64im.o` to produce the final guest binary your zkVM runs.
-Linking conventions — linker scripts, entry point, heap layout, and accelerator wiring —
-are platform-specific and determined by your zkVM target.
+Linking conventions are platform-specific. Your zkVM target determines the linker script,
+entry point, heap layout, and accelerator wiring.
 
 The [zesu-zkvm repository](https://github.com/Consensys/zesu-zkvm) contains working
 integrations for Zisk and OpenVM.

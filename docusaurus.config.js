@@ -141,6 +141,7 @@ const config = {
           {
             label: "Releases",
             href: "https://github.com/Consensys/zesu/releases",
+            className: "navbar-releases-link",
             position: "right",
           },
           {
