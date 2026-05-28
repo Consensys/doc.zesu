@@ -10,7 +10,6 @@ const sidebars = {
       collapsed: false,
       items: [
         "get-started/get-guest-program",
-        "get-started/quickstart",
         "get-started/install-native",
       ],
     },
@@ -26,14 +25,6 @@ const sidebars = {
     },
     {
       type: "category",
-      label: "How to",
-      collapsed: false,
-      items: [
-        "how-to/configure",
-      ],
-    },
-    {
-      type: "category",
       label: "Reference",
       collapsed: false,
       items: [
@@ -41,7 +32,6 @@ const sidebars = {
         "reference/zkvm-symbols",
       ],
     },
-    "troubleshooting",
   ],
 };
 

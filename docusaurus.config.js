@@ -143,18 +143,13 @@ const config = {
             className: "header-github-link",
             position: "right",
           },
-          {
-            href: "https://discord.com/invite/consensys",
-            className: "header-discord-link",
-            position: "right",
-          },
         ],
       },
       footer: {
         style: "dark",
         links: [
           {
-            title: "Docs",
+            title: "Documentation",
             items: [
               {
                 label: "Introduction",
@@ -162,7 +157,7 @@ const config = {
               },
               {
                 label: "Get started",
-                to: "/get-started/system-requirements",
+                to: "/get-started/get-guest-program",
               },
               {
                 label: "Concepts",
@@ -180,27 +175,6 @@ const config = {
               {
                 label: "Zesu",
                 href: "https://github.com/Consensys/zesu",
-              },
-              {
-                label: "besu-zkevm-plugin",
-                href: "https://github.com/Consensys/besu-zkevm-plugin",
-              },
-            ],
-          },
-          {
-            title: "Community",
-            items: [
-              {
-                label: "Consensys Discord",
-                href: "https://discord.com/invite/consensys",
-              },
-              {
-                label: "Consensys Twitter",
-                href: "https://twitter.com/consensys",
-              },
-              {
-                label: "Consensys home",
-                href: "https://consensys.net/",
               },
             ],
           },
