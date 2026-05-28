@@ -139,6 +139,11 @@ const config = {
         },
         items: [
           {
+            label: "Releases",
+            href: "https://github.com/Consensys/zesu/releases",
+            position: "right",
+          },
+          {
             href: "https://github.com/Consensys/zesu",
             className: "header-github-link",
             position: "right",

@@ -70,7 +70,7 @@ host:
 - **zkVM hosts** place the SSZ bytes in a memory-mapped input region the guest reads
   through the `read_input` symbol. See
   [zkVM symbols](../reference/zkvm-symbols.mdx) for the symbol contract.
-- **The native binary** reads the SSZ bytes from a file or from standard input. See
+- **[The native binary](../get-started/install-native.mdx)** reads the SSZ bytes from a file or from standard input. See
   [CLI options](../reference/cli-options.mdx) for the exact flags and precedence.
 
 The native binary additionally accepts a JSON development format (one file for the block,
@@ -101,9 +101,7 @@ Zesu serialises this as a 41-byte SSZ commitment:
 
 Each field serves a verification role.
 
-- `new_payload_request_root` binds the proof to a specific payload. A verifier recomputes
-  the hash from the payload it expects to validate and rejects the proof if the roots
-  don't match.
+- `new_payload_request_root` binds the proof to a specific payload.
 - `chain_id` tells the verifier which chain the proof applies to.
 - `successful_validation` reports whether block execution succeeded.
 
