@@ -34,6 +34,11 @@ zkVM, which then produces a block-validation proof for a verifier](/img/overview
 
 ## Why Zesu exists
 
+The Ethereum roadmap is moving towards
+[zkEVM-based block verification](https://ethereum.org/roadmap/zkevm/), where a single
+prover generates a cryptographic proof of block execution that any node can verify cheaply,
+without re-executing transactions.
+
 Re-executing every transaction in a block is computationally expensive.
 Block-validation proofs offer an alternative: a verifier can confirm correct block execution
 by checking a compact cryptographic proof, without re-processing any transactions.
