@@ -12,20 +12,20 @@ keywords:
   ]
 ---
 
-:::caution
-The execution witness specification is still being finalised and the retrieval method
-described here will likely change.
-
-Longer-term proposals would deliver witnesses over the Engine API alongside block payloads.
-See [execution-apis #741](https://github.com/ethereum/execution-apis/issues/741) and
-[#773](https://github.com/ethereum/execution-apis/pull/773) for the latest proposals.
-:::
-
 An execution witness is a record of the chain state that Zesu needs to re-execute a block's
 transactions.
 The execution client produces the witness; Zesu consumes it.
 Zesu doesn't hold any chain state of its own, and uses the witness to re-execute each block
 without access to the broader state.
+
+:::warning
+The execution witness specification is still being finalized and the retrieval method
+described here will likely change.
+
+Longer-term proposals would deliver witnesses over the Engine API alongside block payloads.
+See `execution-apis` issues [#741](https://github.com/ethereum/execution-apis/issues/741) and
+[#773](https://github.com/ethereum/execution-apis/pull/773) for the latest proposals.
+:::
 
 ## Why Zesu needs a witness
 
@@ -39,7 +39,7 @@ The connected execution client produces the witness as part of executing each bl
 It captures the pre-state values of every account and storage slot that the block's transactions
 access, packages them into the witness, and makes the witness available to Zesu.
 
-## Witness vs proof
+## Witness vs. proof
 
 The witness and the proof serve different roles in the pipeline:
 

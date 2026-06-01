@@ -13,6 +13,7 @@ const config = {
   baseUrl,
   onBrokenLinks: "throw",
   markdown: {
+    mermaid: true,
     hooks: {
       onBrokenMarkdownLinks: "throw",
     }
@@ -277,6 +278,7 @@ const config = {
     ],
   ],
   themes: [
+    "@docusaurus/theme-mermaid",
     [
       require.resolve("@easyops-cn/docusaurus-search-local"),
       {

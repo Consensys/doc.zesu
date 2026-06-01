@@ -14,22 +14,52 @@ keywords:
   ]
 ---
 
-:::caution
-[Ethereum Improvement Proposal 8025 (EIP-8025)](https://github.com/frisitano/EIPs/blob/d5653bc4d9b86997e069567dcd1eb8766b0c8a55/EIPS/eip-8025.md)
-is in Draft status; the link points to the spec author's working draft on a personal
-fork rather than the canonical [`ethereum/EIPs`](https://github.com/ethereum/EIPs)
-repository. The inputs and outputs described here may change as the spec evolves.
-:::
-
 Zesu runs as a guest program inside a zkVM and has a defined contract for what it
 consumes and what it returns.
-That contract is defined by EIP-8025, which proposes optional execution proofs for the
+That contract is defined by [EIP-8025](https://github.com/frisitano/EIPs/blob/d5653bc4d9b86997e069567dcd1eb8766b0c8a55/EIPS/eip-8025.md), which proposes optional execution proofs for the
 Ethereum consensus layer.
 The contract spans three integration points. Execution clients produce the input, zkVM
 hosts pass it to Zesu, and verifiers read the output to confirm proof validity.
 
-![Diagram of Zesu's input/output contract: private StatelessInput enters on the left,
-Zesu processes it inside a zkVM, and public output plus proof exit on the right](/img/inputs-outputs.png)
+:::warning
+EIP-8025 is in draft status and currently hosted on the spec author's fork rather than the
+canonical [`ethereum/EIPs`](https://github.com/ethereum/EIPs) repository.
+The details described here may change as the spec evolves.
+:::
+
+```mermaid
+---
+config:
+  layout: elk
+---
+flowchart LR
+    subgraph input["Private input (StatelessInput)\nnot visible to verifiers"]
+        F1[new_payload_request]
+        F2[witness]
+        F3[chain_config]
+        F4[public_keys]
+    end
+    subgraph zkvm["zkVM"]
+        Z["Zesu\n(guest)"]
+    end
+    subgraph pubout["Public output (41 bytes)\nvisible to verifiers"]
+        O1["new_payload_request_root (32B)"]
+        O2["chain_id (8B)"]
+        O3["successful_validation (1B)"]
+    end
+    subgraph proof["Proof"]
+        P1["proof_data (zkVM blob)"]
+        P2[proof_type]
+    end
+    input -->|read_input| zkvm
+    zkvm -->|write_output| pubout
+    zkvm -->|proof| proof
+    classDef blueBox fill:#dbeafe,stroke:#2563eb,color:#1e40af
+    classDef grayBox fill:#e8e8e8,stroke:#969696,color:#303030
+    class pubout,proof blueBox
+    class input grayBox
+    style zkvm stroke-dasharray:6 4
+```
 
 ## The stateless input
 
@@ -74,7 +104,7 @@ host:
   [CLI options](../reference/cli-options.mdx) for the exact flags and precedence.
 
 The native binary additionally accepts a JSON development format (one file for the block,
-one for the witness) that deserialises into the same `StatelessInput` structure.
+one for the witness) that deserializes into the same `StatelessInput` structure.
 The JSON format is a development convenience for cases where SSZ-encoded inputs are not
 available; it is not part of the EIP-8025 contract.
 
@@ -91,7 +121,7 @@ class StatelessValidationResult:
 
 The Zesu commitment simplifies `StatelessValidationResult` by including only `chain_id`
 rather than the full `chain_config`.
-Zesu serialises this as a 41-byte SSZ commitment:
+Zesu serializes this as a 41-byte SSZ commitment:
 
 | Bytes      | Field                      | Description                                     |
 |------------|----------------------------|-------------------------------------------------|
@@ -122,7 +152,7 @@ Each integration point relies on a different part of this split.
 - **Execution clients** that produce witnesses need to populate every field of the
   stateless input correctly. A malformed witness or mismatched chain configuration causes
   the guest to return `successful_validation = false`.
-- **zkVM hosts** that run Zesu pass the serialised stateless input as private input and
+- **zkVM hosts** that run Zesu pass the serialized stateless input as private input and
   surface the 41-byte commitment as public output. The zkVM's symbol ABI for `read_input`
   and `write_output` mediates this exchange.
 - **Verifiers** read only the public output and use it to bind a proof to a specific

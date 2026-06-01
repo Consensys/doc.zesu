@@ -29,8 +29,15 @@ It re-executes blocks without holding local chain state and runs inside a zkVM t
 block-validation proofs verifiers can use to confirm correct block execution without
 re-processing any transactions.
 
-![Diagram showing an execution client passing block data and a witness to Zesu running inside a
-zkVM, which then produces a block-validation proof for a verifier](/img/overview.png)
+```mermaid
+flowchart LR
+    A["Execution client\n(holds chain state)"] -->|"block data + witness"| zkvm
+    subgraph zkvm["zkVM"]
+        B["Zesu\n(stateless executor)"]
+    end
+    zkvm -->|"block-validation proof"| C["Verifier"]
+    style zkvm stroke-dasharray:6 4
+```
 
 ## Why Zesu exists
 
