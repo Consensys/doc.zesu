@@ -55,11 +55,11 @@ The details described here may change as the spec evolves.
 
 ```mermaid
 flowchart LR
-    A["Execution client\n(holds chain state)"] -->|"block data + witness"| zkvm
-    subgraph zkvm["zkVM"]
-        B["Zesu\n(stateless executor)"]
+    A["`**Execution client**<br/>(holds chain state)`"] -->|"block data<br/>+ witness"| zkvm
+    subgraph zkvm["`**zkVM**`"]
+        B["`**Zesu**<br/>(stateless executor)`"]
     end
-    zkvm -->|"block-validation proof"| C["Verifier"]
+    zkvm -->|"block-validation<br/>proof"| C["`**Verifier**`"]
     style zkvm stroke-dasharray:6 4
 ```
 

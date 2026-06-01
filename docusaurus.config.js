@@ -188,6 +188,11 @@ const config = {
         ],
         copyright: `© ${new Date().getFullYear()} Consensys, Inc.`,
       },
+      mermaid: {
+        options: {
+          fontFamily: 'var(--ifm-font-family-base)',
+        },
+      },
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,

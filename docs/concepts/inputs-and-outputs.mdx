@@ -31,31 +31,37 @@ The details described here may change as the spec evolves.
 ---
 config:
   layout: elk
+  elk:
+    nodePlacementStrategy: LINEAR_SEGMENTS
 ---
 flowchart LR
-    subgraph input["Private input (StatelessInput)\nnot visible to verifiers"]
+    subgraph input["`**Private input** (StatelessInput)<br/>not visible to verifiers`"]
+        direction TB
         F1[new_payload_request]
         F2[witness]
         F3[chain_config]
         F4[public_keys]
     end
-    subgraph zkvm["zkVM"]
-        Z["Zesu\n(guest)"]
+    subgraph zkvm["`**zkVM**`"]
+        Z["`**Zesu**<br/>(guest)`"]
     end
-    subgraph pubout["Public output (41 bytes)\nvisible to verifiers"]
-        O1["new_payload_request_root (32B)"]
-        O2["chain_id (8B)"]
-        O3["successful_validation (1B)"]
+    subgraph pubout["`**Public output** (41 bytes)<br/>visible to verifiers`"]
+        direction TB
+        O1["new_payload_request_root (32 bytes)"]
+        O2["chain_id (8 bytes)"]
+        O3["successful_validation<br/>(1 byte)"]
     end
-    subgraph proof["Proof"]
+    subgraph proof["`**Proof**`"]
+        direction TB
         P1["proof_data (zkVM blob)"]
         P2[proof_type]
     end
+    F1 ~~~ F2 ~~~ F3 ~~~ F4
+    O1 ~~~ O2 ~~~ O3
+    P1 ~~~ P2
     input -->|read_input| zkvm
     zkvm -->|write_output| pubout
     zkvm -->|proof| proof
-    classDef blueBox fill:#dbeafe,stroke:#2563eb,color:#1e40af
-    classDef grayBox fill:#e8e8e8,stroke:#969696,color:#303030
     class pubout,proof blueBox
     class input grayBox
     style zkvm stroke-dasharray:6 4

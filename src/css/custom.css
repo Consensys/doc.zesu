@@ -273,3 +273,65 @@ h4 {
 img, iframe {
   border-radius: 0.4rem;
 }
+
+/* Mermaid subgraph colors — light mode */
+.blueBox rect,
+.blueBox .label-container {
+  fill: #dbeafe !important;
+  stroke: #2563eb !important;
+}
+
+.blueBox text,
+.blueBox span {
+  fill: #1e40af !important;
+  color: #1e40af !important;
+}
+
+.grayBox rect,
+.grayBox .label-container {
+  fill: #e8e8e8 !important;
+  stroke: #969696 !important;
+}
+
+.grayBox text,
+.grayBox span {
+  fill: #303030 !important;
+  color: #303030 !important;
+}
+
+/* Mermaid subgraph colors — dark mode */
+[data-theme="dark"] .blueBox rect,
+[data-theme="dark"] .blueBox .label-container {
+  fill: #1e3a5f !important;
+  stroke: #60a5fa !important;
+}
+
+[data-theme="dark"] .blueBox text,
+[data-theme="dark"] .blueBox span {
+  fill: #bfdbfe !important;
+  color: #bfdbfe !important;
+}
+
+[data-theme="dark"] .grayBox rect,
+[data-theme="dark"] .grayBox .label-container {
+  fill: #0f172a !important;
+  stroke: #94a3b8 !important;
+}
+
+[data-theme="dark"] .grayBox text,
+[data-theme="dark"] .grayBox span {
+  fill: #e2e8f0 !important;
+  color: #e2e8f0 !important;
+}
+
+/* Thicker strokes for all Mermaid diagrams */
+svg[id^="mermaid"] .node rect,
+svg[id^="mermaid"] .node circle,
+svg[id^="mermaid"] .node ellipse,
+svg[id^="mermaid"] .node polygon,
+svg[id^="mermaid"] .label-container,
+svg[id^="mermaid"] .cluster rect,
+svg[id^="mermaid"] .edgePath path,
+svg[id^="mermaid"] .flowchart-link {
+  stroke-width: 2px !important;
+}
