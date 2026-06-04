@@ -274,18 +274,6 @@ img, iframe {
   border-radius: 0.4rem;
 }
 
-/* Thicker strokes for all Mermaid diagrams */
-svg[id^="mermaid"] .node rect,
-svg[id^="mermaid"] .node circle,
-svg[id^="mermaid"] .node ellipse,
-svg[id^="mermaid"] .node polygon,
-svg[id^="mermaid"] .label-container,
-svg[id^="mermaid"] .cluster rect,
-svg[id^="mermaid"] .edgePath path,
-svg[id^="mermaid"] .flowchart-link {
-  stroke-width: 2px !important;
-}
-
 /* Mermaid subgraph colors — light mode */
 .blueBox rect,
 .blueBox .label-container {
@@ -334,4 +322,15 @@ svg[id^="mermaid"] .flowchart-link {
 [data-theme="dark"] .grayBox span {
   fill: #e2e8f0 !important;
   color: #e2e8f0 !important;
+}
+
+/* Thicker strokes for all Mermaid diagrams */
+svg[id^="mermaid"] .node rect,
+svg[id^="mermaid"] .node circle,
+svg[id^="mermaid"] .node ellipse,
+svg[id^="mermaid"] .node polygon,
+svg[id^="mermaid"] .cluster rect,
+svg[id^="mermaid"] .edgePath path,
+svg[id^="mermaid"] .flowchart-link {
+  stroke-width: 2px !important;
 }
