@@ -13,7 +13,7 @@ interface CardListProps {
   items: CardItem[];
 }
 
-export default function CardList({ items }: CardListProps): JSX.Element {
+export default function CardList({ items }: CardListProps): React.JSX.Element {
   return (
     <ul className={styles.list}>
       {items.map((item) => (
