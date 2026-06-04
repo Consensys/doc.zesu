@@ -47,14 +47,21 @@ message on the `execution_proof` gossip topic, as defined by
 Proof-verifying nodes receive it via gossip and use the public commitment to confirm the
 proof covers the expected payload.
 
-:::note
-EIP-8025 is in Draft and currently hosted on the spec author's fork rather than the
+:::warning
+EIP-8025 is in draft status and currently hosted on the spec author's fork rather than the
 canonical [`ethereum/EIPs`](https://github.com/ethereum/EIPs) repository.
 The details described here may change as the spec evolves.
 :::
 
-![Diagram showing an execution client passing block data and a witness to Zesu running
-inside a zkVM, which then produces a block-validation proof for a verifier](/img/overview.png)
+```mermaid
+flowchart LR
+    A["`**Execution client**<br/>(holds chain state)`"] -->|"block data<br/>+ witness"| zkvm
+    subgraph zkvm["`**zkVM**`"]
+        B["`**Zesu**<br/>(stateless executor)`"]
+    end
+    zkvm -->|"block-validation<br/>proof"| C["`**Verifier**`"]
+    style zkvm stroke-dasharray:6 4
+```
 
 ## The relocatable ELF design
 
@@ -64,7 +71,7 @@ named `zesu.rv64im.o`.
 extension.
 
 All EVM and stateless execution logic lives in this single object.
-Platform-specific behaviour (IO, memory management, logging, and cryptographic
+Platform-specific behavior (I/O, memory management, logging, and cryptographic
 acceleration) is left as unresolved extern symbol references.
 Each zkVM host provides a host object that satisfies these references using
 platform-native circuits or software fallbacks, then links it against `zesu.rv64im.o`
@@ -75,9 +82,9 @@ Adding support for a new zkVM requires only a new host object that satisfies the
 contract; the EVM implementation itself does not change.
 
 Pre-built `zesu.rv64im.o` artifacts are published as
-[GitHub Releases](https://github.com/Consensys/zesu/releases) so zkVM hosts can integrate
+[GitHub releases](https://github.com/Consensys/zesu/releases) so zkVM hosts can integrate
 Zesu without a source dependency on this repository.
-The [zesu-zkvm repository](https://github.com/Consensys/zesu-zkvm) provides working
+The [`zesu-zkvm` repository](https://github.com/Consensys/zesu-zkvm) provides working
 integrations for Zisk and OpenVM as a reference for new targets.
 The same source also builds as a native binary that runs on a host CPU without any zkVM,
 used for debugging execution against captured blocks and validating zkVM integrations
@@ -91,15 +98,15 @@ native build.
 
 The extern references that zkVM hosts must satisfy fall into three categories.
 
-**IO**: how the host passes the `StatelessInput` to Zesu and receives the public
-commitment back. The two IO symbols (`read_input` and `write_output`) are the only channel
+- **I/O**: how the host passes the `StatelessInput` to Zesu and receives the public
+commitment back. The two I/O symbols (`read_input` and `write_output`) are the only channel
 between the guest and the host at runtime.
 
-**Runtime**: execution environment support: logging, process termination, and the bump
+- **Runtime**: execution environment support: logging, process termination, and the bump
 heap allocator's position and upper-bound variables. These let Zesu operate in a
 freestanding environment without an operating system.
 
-**Accelerators**: EVM precompile operations (keccak256, secp256k1 recovery, BN254
+- **Accelerators**: EVM precompile operations (keccak256, secp256k1 recovery, BN254
 pairings, and so on) delegated to zkVM-native implementations where available.
 Hardware-accelerated precompiles reduce proof cost significantly for computationally
 expensive EVM operations.
@@ -115,5 +122,5 @@ including signatures and descriptions.
   41-byte public commitment.
 - [Witness retrieval](./witness-retrieval.mdx): how Zesu obtains the witness it needs to
   re-execute a block.
-- [zkVM symbol reference](../reference/zkvm-symbols.mdx): complete tables of IO, runtime,
+- [zkVM symbol reference](../reference/zkvm-symbols.mdx): complete tables of I/O, runtime,
   and accelerator symbols that zkVM hosts must implement.

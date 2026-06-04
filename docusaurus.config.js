@@ -13,6 +13,7 @@ const config = {
   baseUrl,
   onBrokenLinks: "throw",
   markdown: {
+    mermaid: true,
     hooks: {
       onBrokenMarkdownLinks: "throw",
     }
@@ -187,6 +188,11 @@ const config = {
         ],
         copyright: `© ${new Date().getFullYear()} Consensys, Inc.`,
       },
+      mermaid: {
+        options: {
+          fontFamily: 'var(--ifm-font-family-base)',
+        },
+      },
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
@@ -277,6 +283,7 @@ const config = {
     ],
   ],
   themes: [
+    "@docusaurus/theme-mermaid",
     [
       require.resolve("@easyops-cn/docusaurus-search-local"),
       {
