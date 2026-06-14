@@ -18,8 +18,10 @@ Zesu runs as a guest program inside a zkVM and has a defined contract for what i
 consumes and what it returns.
 That contract is defined by [EIP-8025](https://github.com/frisitano/EIPs/blob/d5653bc4d9b86997e069567dcd1eb8766b0c8a55/EIPS/eip-8025.md), which proposes optional execution proofs for the
 Ethereum consensus layer.
-The contract spans three integration points. Execution clients produce the input, zkVM
-hosts pass it to Zesu, and verifiers read the output to confirm proof validity.
+The contract spans three integration points.
+Execution clients produce the input, the zkVM loads it into memory where Zesu reads it
+directly, and the output feeds the proof that provers generate, distribute, and verifiers
+later check.
 
 :::warning
 EIP-8025 is in draft status and currently hosted on the spec author's fork rather than the
@@ -45,11 +47,11 @@ flowchart LR
     subgraph zkvm["`**zkVM**`"]
         Z["`**Zesu**<br/>(guest)`"]
     end
-    subgraph pubout["`**Public output** (41 bytes)<br/>visible to verifiers`"]
+    subgraph pubout["`**Public output** (105 bytes)<br/>visible to verifiers`"]
         direction TB
         O1["new_payload_request_root (32 bytes)"]
-        O2["chain_id (8 bytes)"]
-        O3["successful_validation<br/>(1 byte)"]
+        O2["successful_validation<br/>(1 byte)"]
+        O3["chain_config (72 bytes)"]
     end
     subgraph proof["`**Proof**`"]
         direction TB
@@ -125,25 +127,23 @@ class StatelessValidationResult:
     chain_config: ChainConfig
 ```
 
-The Zesu commitment simplifies `StatelessValidationResult` by including only `chain_id`
-rather than the full `chain_config`.
-Zesu serializes this as a 41-byte SSZ commitment:
+Zesu serializes this `StatelessValidationResult` as a 105-byte SSZ commitment:
 
-| Bytes      | Field                      | Description                                     |
-|------------|----------------------------|-------------------------------------------------|
-| `[0..32]`  | `new_payload_request_root` | SSZ `hash_tree_root` of the `NewPayloadRequest` |
-| `[32..40]` | `chain_id`                 | Chain ID as a little-endian `uint64`            |
-| `[40]`     | `successful_validation`    | `0x01` for success, `0x00` for failure          |
+| Bytes       | Field                      | Description                                     |
+|-------------|----------------------------|-------------------------------------------------|
+| `[0..32]`   | `new_payload_request_root` | SSZ `hash_tree_root` of the `NewPayloadRequest` |
+| `[32]`      | `successful_validation`    | `0x01` for success, `0x00` for failure          |
+| `[33..105]` | `chain_config`             | SSZ-encoded `SszChainConfig` (72 bytes)         |
 
 Each field serves a verification role.
 
 - `new_payload_request_root` binds the proof to a specific payload.
-- `chain_id` tells the verifier which chain the proof applies to.
 - `successful_validation` reports whether block execution succeeded.
+- `chain_config` tells the verifier which chain and fork configuration the proof applies to.
 
 A proof-verifying node accepts the proof only when the proof itself verifies for the
 expected guest program, `successful_validation` is `0x01`, and both the request root and
-chain ID match what the verifier expects.
+chain configuration match what the verifier expects.
 
 ## Why the contract matters
 
@@ -159,7 +159,7 @@ Each integration point relies on a different part of this split.
   stateless input correctly. A malformed witness or mismatched chain configuration causes
   the guest to return `successful_validation = false`.
 - **zkVM hosts** that run Zesu pass the serialized stateless input as private input and
-  surface the 41-byte commitment as public output. The zkVM's symbol ABI for `read_input`
+  surface the 105-byte commitment as public output. The zkVM's symbol ABI for `read_input`
   and `write_output` mediates this exchange.
 - **Verifiers** read only the public output and use it to bind a proof to a specific
   payload before treating that proof as evidence of valid execution.

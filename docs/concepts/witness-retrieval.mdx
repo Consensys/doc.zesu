@@ -36,8 +36,9 @@ pre-assembled record of exactly the state that block touches.
 That record is the witness.
 
 The connected execution client produces the witness as part of executing each block.
-It captures the pre-state values of every account and storage slot that the block's transactions
-access, packages them into the witness, and makes the witness available to Zesu.
+It captures the pre-state values of every account, storage slot, and contract code that the
+block's transactions access, packages them into the witness, and makes the witness available
+to Zesu.
 
 ## Witness vs. proof
 
@@ -54,6 +55,12 @@ In the current devnet setup, the witness is an intermediate artifact that doesn'
 beyond the prover.
 The proof is the compact, distributable certificate that verifiers use to confirm correct
 block execution.
+
+The term "proof" is overloaded here.
+The witness contains Merkle proofs that show the supplied state values belong to the block's
+pre-state root.
+The zk-proof is separate: it attests that Zesu executed the block correctly over that state.
+This page uses "proof" for the zk-proof and "witness" for the bundle of Merkle proofs.
 
 ## How witnesses reach Zesu
 
