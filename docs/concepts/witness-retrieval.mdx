@@ -40,27 +40,29 @@ It captures the pre-state values of every account, storage slot, and contract co
 block's transactions access, packages them into the witness, and makes the witness available
 to Zesu.
 
-## Witness vs. proof
+## Witness vs. execution proof
 
-The witness and the proof serve different roles in the pipeline:
+The witness and the execution proof are both forms of proof, so it's worth distinguishing
+them up front.
+The witness is a set of Merkle proofs: each entry proves that a supplied state value belongs
+to the block's pre-state root.
+The execution proof is the zero-knowledge proof Zesu's execution produces, attesting that the
+block was executed correctly over that state.
 
-|              | Witness                       | Proof                      |
-|--------------|-------------------------------|----------------------------|
-| Role         | Input to Zesu's execution     | Output of Zesu's execution |
-| Size         | Megabytes                     | Kilobytes                  |
-| Consumer     | Zesu                          | Verifiers                  |
-| Distribution | Local to the prover           | Distributed to verifiers   |
+The two serve different roles in the pipeline:
+
+|              | Witness                    | Execution proof                   |
+|--------------|----------------------------|-----------------------------------|
+| What it is   | Merkle proofs of pre-state | Zero-knowledge proof of execution |
+| Role         | Input to Zesu's execution  | Output of Zesu's execution        |
+| Size         | Megabytes                  | Kilobytes                         |
+| Consumer     | Zesu                       | Verifiers                         |
+| Distribution | Local to the prover        | Distributed to verifiers          |
 
 In the current devnet setup, the witness is an intermediate artifact that doesn't travel
 beyond the prover.
-The proof is the compact, distributable certificate that verifiers use to confirm correct
-block execution.
-
-The term "proof" is overloaded here.
-The witness contains Merkle proofs that show the supplied state values belong to the block's
-pre-state root.
-The zk-proof is separate: it attests that Zesu executed the block correctly over that state.
-This page uses "proof" for the zk-proof and "witness" for the bundle of Merkle proofs.
+The execution proof is the compact, distributable certificate that verifiers use to confirm
+correct block execution.
 
 ## How witnesses reach Zesu
 
