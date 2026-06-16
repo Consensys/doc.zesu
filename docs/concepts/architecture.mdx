@@ -34,7 +34,7 @@ See [Witness retrieval](./witness-retrieval.mdx) for how Zesu retrieves the witn
 
 The prover node runs Zesu as a guest program inside a zkVM.
 Zesu receives a `StatelessInput` bundle via the zkVM's `read_input` interface, re-executes
-the block against the witness, and emits a 41-byte public commitment via `write_output`.
+the block against the witness, and emits a 105-byte public commitment via `write_output`.
 The zkVM then produces a proof that Zesu executed correctly.
 See [Inputs and outputs](./inputs-and-outputs.mdx) for the full I/O contract.
 
@@ -71,7 +71,7 @@ named `zesu.rv64im.o`.
 extension.
 
 All EVM and stateless execution logic lives in this single object.
-Platform-specific behavior (I/O, memory management, logging, and cryptographic
+Platform-specific behavior (I/O, heap bounds, logging, and cryptographic
 acceleration) is left as unresolved extern symbol references.
 Each zkVM host provides a host object that satisfies these references using
 platform-native circuits or software fallbacks, then links it against `zesu.rv64im.o`
@@ -81,11 +81,21 @@ This design decouples EVM logic from zkVM specifics at the ELF/ABI level.
 Adding support for a new zkVM requires only a new host object that satisfies the symbol
 contract; the EVM implementation itself does not change.
 
+Memory is a joint concern. The zkVM's linker script places the ELF object, stack, and heap
+in the guest address space, while Zesu manages that heap itself with a
+[bump allocator](https://github.com/Consensys/zesu/blob/main/src/zkvm/bump_alloc.zig) that
+never reclaims memory.
+Skipping deallocation keeps the execution trace simpler and cheaper to prove, which differs
+from how many guest programs manage memory.
+
 Pre-built `zesu.rv64im.o` artifacts are published as
 [GitHub releases](https://github.com/Consensys/zesu/releases) so zkVM hosts can integrate
 Zesu without a source dependency on this repository.
-The [`zesu-zkvm` repository](https://github.com/Consensys/zesu-zkvm) provides working
-integrations for Zisk and OpenVM as a reference for new targets.
+The [`zesu-zkvm` repository](https://github.com/Consensys/zesu-zkvm) provides example
+integrations for the Zisk, OpenVM, and Linea zkVMs.
+It is a stop-gap for zkVMs that don't yet implement the
+[zkVM standards](https://github.com/eth-act/zkvm-standards); as they adopt the common
+interface, they can satisfy the symbol contract directly.
 The same source also builds as a native binary that runs on a host CPU without any zkVM,
 used for debugging execution against captured blocks and validating zkVM integrations
 against the same I/O contract.
@@ -119,7 +129,7 @@ including signatures and descriptions.
 - [Obtain the guest program](../get-started/get-guest-program.mdx): download and
   integration steps for zkVM hosts.
 - [Inputs and outputs](./inputs-and-outputs.mdx): the `StatelessInput` structure and the
-  41-byte public commitment.
+  105-byte public commitment.
 - [Witness retrieval](./witness-retrieval.mdx): how Zesu obtains the witness it needs to
   re-execute a block.
 - [zkVM symbol reference](../reference/zkvm-symbols.mdx): complete tables of I/O, runtime,

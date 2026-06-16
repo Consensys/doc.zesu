@@ -20,6 +20,11 @@ source to:
 - Debug a failing block.
 - Validate a zkVM integration's commitment against a known-correct value.
 
+:::note
+Zesu's standalone debug mode is being refactored.
+The options and behavior on this page may change.
+:::
+
 ## Specify options
 
 You can specify Zesu options on the command line:
@@ -148,7 +153,7 @@ If `ZESU_INPUT` is not set, Zesu reads from standard input.
 
 ## Output streams
 
-Zesu writes its public output (the 41-byte SSZ commitment, or the JSON summary
+Zesu writes its public output (the 105-byte SSZ commitment, or the JSON summary
 for [`--json`](#json) input) to standard output.
 Diagnostic messages go to standard error.
 See [Inputs and outputs](../concepts/inputs-and-outputs.mdx) for the output
