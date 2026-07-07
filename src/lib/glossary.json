@@ -30,10 +30,6 @@
       "definition": "A network role, distinct from validators and block builders, that runs Zesu inside a zkVM to generate a block-validation proof and distributes the resulting execution proof."
     },
     {
-      "term": "rv64im",
-      "definition": "The RISC-V 64-bit base integer instruction set with the integer multiply extension. Zesu's guest program targets `rv64im`, so zkVM hosts must support this instruction set."
-    },
-    {
       "term": "Runtime symbol",
       "definition": "An extern symbol that provides execution environment support such as logging, process termination, and the bump heap allocator's position and upper-bound variables, letting Zesu run in a freestanding environment without an operating system."
     },

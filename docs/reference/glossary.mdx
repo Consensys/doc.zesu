@@ -41,10 +41,6 @@ A network role, distinct from validators and block builders, that runs Zesu insi
 
 An extern symbol that provides execution environment support such as logging, process termination, and the bump heap allocator's position and upper-bound variables, letting Zesu run in a freestanding environment without an operating system.
 
-### rv64im
-
-The RISC-V 64-bit base integer instruction set with the integer multiply extension. Zesu's guest program targets `rv64im`, so zkVM hosts must support this instruction set.
-
 ### SSZ
 
 Simple Serialize, the wire format used to encode the stateless input Zesu consumes and the public commitment it produces.
