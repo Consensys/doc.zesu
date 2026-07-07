@@ -12,9 +12,11 @@ keywords:
   ]
 ---
 
-An execution witness is a record of the chain state that Zesu needs to re-execute a block's
+import GlossaryTerm from '@theme/GlossaryTerm'
+
+An <GlossaryTerm term="Execution witness">execution witness</GlossaryTerm> is a record of the chain state that Zesu needs to re-execute a block's
 transactions.
-The execution client produces the witness; Zesu consumes it.
+The <GlossaryTerm term="Execution client">execution client</GlossaryTerm> produces the witness; Zesu consumes it.
 Zesu doesn't hold any chain state of its own, and uses the witness to re-execute each block
 without access to the broader state.
 

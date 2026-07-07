@@ -30,6 +30,7 @@ const sidebars = {
       items: [
         "reference/cli-options",
         "reference/zkvm-symbols",
+        "reference/glossary",
       ],
     },
   ],
