@@ -20,13 +20,14 @@ keywords:
 ---
 
 import CardList from '@site/src/components/CardList'
+import GlossaryTerm from '@theme/GlossaryTerm'
 
 # Introduction
 
-Zesu is a stateless EVM block executor, written in Zig and designed to run as a zkVM guest
+Zesu is a stateless EVM block executor, written in Zig and designed to run as a <GlossaryTerm term="zkVM">zkVM</GlossaryTerm> guest
 program.
 It re-executes blocks without holding local chain state and runs inside a zkVM that produces
-block-validation proofs that verifiers can use to confirm correct block execution without
+block-validation proofs that <GlossaryTerm term="Verifier">verifiers</GlossaryTerm> can use to confirm correct block execution without
 re-processing any transactions.
 
 ```mermaid
@@ -55,8 +56,8 @@ The same proving capability applies to other networks that require EVM execution
 
 ## How Zesu works
 
-Zesu receives an SSZ-encoded block bundle (execution payload and witness) from an execution
-client that holds the full chain state, then re-executes the block inside a zkVM, which then
+Zesu receives an <GlossaryTerm term="SSZ">SSZ</GlossaryTerm>-encoded block bundle (execution payload and <GlossaryTerm term="Execution witness">witness</GlossaryTerm>) from an <GlossaryTerm term="Execution client">execution
+client</GlossaryTerm> that holds the full chain state, then re-executes the block inside a zkVM, which then
 produces a proof that the execution was correct.
 
 Zesu also builds as a native binary that runs the same execution logic on your host CPU

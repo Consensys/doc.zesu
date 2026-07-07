@@ -14,10 +14,12 @@ keywords:
   ]
 ---
 
+import GlossaryTerm from '@theme/GlossaryTerm'
+
 Zesu is a stateless EVM block executor designed to run as a guest program inside a
-zero-knowledge virtual machine (zkVM).
+<GlossaryTerm term="zkVM">zero-knowledge virtual machine (zkVM)</GlossaryTerm>.
 This page explains how Zesu fits into the end-to-end proving pipeline and why it is
-structured as a relocatable ELF object rather than a zkVM-specific binary.
+structured as a relocatable <GlossaryTerm term="ELF object">ELF object</GlossaryTerm> rather than a zkVM-specific binary.
 
 ## The proving pipeline
 
@@ -25,9 +27,9 @@ At a high level, the pipeline has three stages.
 
 **Stage 1: Witness assembly**
 
-A stateful execution client executes or re-executes a block while recording the account,
+A stateful <GlossaryTerm term="Execution client">execution client</GlossaryTerm> executes or re-executes a block while recording the account,
 storage, code, and ancestor-header data that the block's transactions access.
-It packages this data into an execution witness and makes it available to the prover node.
+It packages this data into an <GlossaryTerm term="Execution witness">execution witness</GlossaryTerm> and makes it available to the <GlossaryTerm term="Prover">prover</GlossaryTerm> node.
 See [Witness retrieval](./witness-retrieval.mdx) for how Zesu retrieves the witness.
 
 **Stage 2: Guest execution**

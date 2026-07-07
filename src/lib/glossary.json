@@ -1,0 +1,61 @@
+{
+  "description": "Technical terms used across the Zesu documentation",
+  "terms": [
+    {
+      "term": "Bump allocator",
+      "definition": "The heap allocator Zesu uses inside a zkVM. It advances a cursor as memory is requested and never reclaims memory, which keeps the execution trace simpler and cheaper to prove."
+    },
+    {
+      "term": "ELF object",
+      "definition": "An Executable and Linkable Format object. Zesu is compiled as a relocatable `rv64im` ELF object named `zesu.rv64im.o` that zkVM hosts link against to produce a guest binary."
+    },
+    {
+      "term": "Execution client",
+      "definition": "A stateful node that holds the full chain state, executes or re-executes blocks, and produces the execution witness Zesu needs to re-execute a block statelessly. For example, Besu."
+    },
+    {
+      "term": "Execution proof",
+      "definition": "The compact zero-knowledge proof produced by running Zesu inside a zkVM, attesting that a block was executed correctly. Verifiers use it to confirm correct block execution without re-processing transactions."
+    },
+    {
+      "term": "Execution witness",
+      "definition": "A record of the chain state a block's transactions access, captured as Merkle proofs against the block's pre-state root. The execution client produces it and Zesu consumes it to re-execute a block without holding chain state."
+    },
+    {
+      "term": "Precompile",
+      "definition": "A built-in EVM contract at a fixed address that performs a cryptographic operation. Zesu can delegate precompile operations to zkVM-native accelerator implementations to reduce proof cost."
+    },
+    {
+      "term": "Prover",
+      "definition": "A network role, distinct from validators and block builders, that runs Zesu inside a zkVM to generate a block-validation proof and distributes the resulting execution proof."
+    },
+    {
+      "term": "rv64im",
+      "definition": "The RISC-V 64-bit base integer instruction set with the integer multiply extension. Zesu's guest program targets `rv64im`, so zkVM hosts must support this instruction set."
+    },
+    {
+      "term": "Runtime symbol",
+      "definition": "An extern symbol that provides execution environment support such as logging, process termination, and the bump heap allocator's position and upper-bound variables, letting Zesu run in a freestanding environment without an operating system."
+    },
+    {
+      "term": "SSZ",
+      "definition": "Simple Serialize, the wire format used to encode the stateless input Zesu consumes and the public commitment it produces."
+    },
+    {
+      "term": "Stateless execution",
+      "definition": "Re-executing a block without holding local chain state, relying instead on a pre-assembled execution witness that contains exactly the state the block touches."
+    },
+    {
+      "term": "Verifier",
+      "definition": "A node that checks an execution proof against the public commitment to confirm correct block execution, without access to the chain state or witness."
+    },
+    {
+      "term": "zkEVM",
+      "definition": "An approach to block verification in which a prover generates a cryptographic proof of EVM block execution that any node can verify cheaply, without re-executing transactions. Zesu is built to run inside a zkVM that produces such proofs."
+    },
+    {
+      "term": "zkVM",
+      "definition": "A zero-knowledge virtual machine that executes a guest program and produces a proof that the execution was correct. Zesu runs as a guest program inside a zkVM to generate block-validation proofs."
+    }
+  ]
+}

@@ -15,10 +15,12 @@ keywords:
   ]
 ---
 
-Zesu builds its execution logic as a relocatable RISC-V ELF object named
+import GlossaryTerm from '@theme/GlossaryTerm'
+
+Zesu builds its execution logic as a relocatable RISC-V <GlossaryTerm term="ELF object">ELF object</GlossaryTerm> named
 `zesu.rv64im.o`.
-This object leaves platform-specific behavior as unresolved extern symbol references
-that each zero-knowledge virtual machine (zkVM) target satisfies with a host object.
+This object leaves platform-specific behavior as the unresolved extern symbol references of the symbol contract
+that each <GlossaryTerm term="zkVM">zero-knowledge virtual machine (zkVM)</GlossaryTerm> target satisfies with a host object.
 
 The host object implements each symbol using platform-native circuits or software
 fallbacks, then links against `zesu.rv64im.o` to produce the final guest binary.
@@ -40,7 +42,7 @@ public output bytes.
 
 ## Runtime symbols
 
-Runtime symbols provide execution environment support for logging, process termination,
+<GlossaryTerm term="Runtime symbol">Runtime symbols</GlossaryTerm> provide execution environment support for logging, process termination,
 and memory management.
 
 | Symbol          | Signature                       | Description                                  |

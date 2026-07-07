@@ -14,7 +14,9 @@ keywords:
   ]
 ---
 
-Zesu runs as a guest program inside a zkVM and has a defined contract for what it
+import GlossaryTerm from '@theme/GlossaryTerm'
+
+Zesu runs as a guest program inside a <GlossaryTerm term="zkVM">zkVM</GlossaryTerm> and has a defined contract for what it
 consumes and what it returns.
 That contract is defined by [EIP-8025](https://github.com/frisitano/EIPs/blob/d5653bc4d9b86997e069567dcd1eb8766b0c8a55/EIPS/eip-8025.md), which proposes optional execution proofs for the
 Ethereum consensus layer.
@@ -71,7 +73,7 @@ flowchart LR
 
 ## The stateless input
 
-Zesu consumes a single SSZ-encoded structure called the stateless input.
+Zesu consumes a single <GlossaryTerm term="SSZ">SSZ</GlossaryTerm>-encoded structure called the stateless input.
 
 ```python
 class StatelessInput:
