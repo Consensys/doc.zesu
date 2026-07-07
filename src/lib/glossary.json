@@ -22,16 +22,16 @@
       "definition": "A record of the chain state a block's transactions access, captured as Merkle proofs against the block's pre-state root. The execution client produces it and Zesu consumes it to re-execute a block without holding chain state."
     },
     {
+      "term": "Guest program",
+      "definition": "A program that runs inside a zkVM. Zesu is a guest program: it executes blocks inside the zkVM, which then produces a proof that the execution was correct."
+    },
+    {
       "term": "Precompile",
       "definition": "A built-in EVM contract at a fixed address that performs a cryptographic operation. Zesu can delegate precompile operations to zkVM-native accelerator implementations to reduce proof cost."
     },
     {
       "term": "Prover",
       "definition": "A network role, distinct from validators and block builders, that runs Zesu inside a zkVM to generate a block-validation proof and distributes the resulting execution proof."
-    },
-    {
-      "term": "Runtime symbol",
-      "definition": "An extern symbol that provides execution environment support such as logging, process termination, and the bump heap allocator's position and upper-bound variables, letting Zesu run in a freestanding environment without an operating system."
     },
     {
       "term": "SSZ",
