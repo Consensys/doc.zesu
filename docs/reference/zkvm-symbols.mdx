@@ -45,12 +45,24 @@ public output bytes.
 Runtime symbols provide execution environment support for logging, process termination,
 and memory management.
 
-| Symbol          | Signature                       | Description                                  |
-|-----------------|---------------------------------|----------------------------------------------|
-| `zkvm_log`      | `(u8, [*]const u8, usize) void` | Log a message at the given level             |
-| `zkvm_exit`     | `(i32) noreturn`                | Terminate execution with the given exit code |
-| `ZKVM_HEAP_POS` | `usize` (var)                   | Bump heap cursor advanced by the allocator   |
-| `ZKVM_HEAP_TOP` | `usize` (var)                   | Heap upper bound checked by the allocator    |
+| Symbol          | Signature                       | Description                                            |
+|-----------------|---------------------------------|--------------------------------------------------------|
+| `zkvm_log`      | `(u8, [*]const u8, usize) void` | Log a message at the given level                       |
+| `zkvm_exit`     | `(i32) noreturn`                | Terminate execution with the given exit code           |
+| `ZKVM_HEAP_POS` | `usize` (var)                   | Heap cursor the allocator advances when it grows the heap |
+| `ZKVM_HEAP_TOP` | `usize` (var)                   | Heap upper bound the allocator must not exceed         |
+
+:::note
+On the `zesu.rv64im.o` guest build, Zesu defaults to a
+[free-list allocator](https://github.com/Consensys/zesu/blob/main/src/zkvm/FREELIST_ALLOC.md) that
+recycles freed memory within the heap region `[ZKVM_HEAP_POS, ZKVM_HEAP_TOP)`.
+
+The allocator is selected at build time, and the source also retains a simpler
+bump allocator that never reclaims memory. This affects only how the guest manages the heap.
+The host contract is unchanged, because the host still reserves the heap region
+that these two symbols describe.
+
+:::
 
 ## Accelerator symbols
 

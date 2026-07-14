@@ -83,12 +83,17 @@ This design decouples EVM logic from zkVM specifics at the ELF/ABI level.
 Adding support for a new zkVM requires only a new host object that satisfies the symbol
 contract; the EVM implementation itself does not change.
 
-Memory is a joint concern. The zkVM's linker script places the ELF object, stack, and heap
-in the guest address space, while Zesu manages that heap itself with a
-[bump allocator](https://github.com/Consensys/zesu/blob/main/src/zkvm/bump_alloc.zig) that
-never reclaims memory.
-Skipping deallocation keeps the execution trace simpler and cheaper to prove, which differs
-from how many guest programs manage memory.
+Memory is a joint concern.
+The zkVM's linker script places the ELF object, stack, and heap in the guest
+address space, while Zesu manages that heap itself.
+The allocator is selected at build time.
+The guest build defaults to a
+[free-list allocator](https://github.com/Consensys/zesu/blob/main/src/zkvm/FREELIST_ALLOC.md)
+that reclaims freed memory and reuses it within the fixed heap, which prevents
+heap exhaustion on allocation-heavy blocks.
+The source also retains a simpler bump allocator that never reclaims memory: it
+keeps the execution trace cheaper to prove, but it can exhaust the fixed heap, so
+it is no longer the default.
 
 Pre-built `zesu.rv64im.o` artifacts are published as
 [GitHub releases](https://github.com/Consensys/zesu/releases) so zkVM hosts can integrate
@@ -114,8 +119,8 @@ The extern references that zkVM hosts must satisfy fall into three categories.
 commitment back. The two I/O symbols (`read_input` and `write_output`) are the only channel
 between the guest and the host at runtime.
 
-- **Runtime**: execution environment support: logging, process termination, and the bump
-heap allocator's position and upper-bound variables. These let Zesu operate in a
+- **Runtime**: execution environment support: logging, process termination, and the heap
+allocator's position and upper-bound variables. These let Zesu operate in a
 freestanding environment without an operating system.
 
 - **Accelerators**: EVM precompile operations (keccak256, secp256k1 recovery, BN254

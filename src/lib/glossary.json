@@ -3,7 +3,7 @@
   "terms": [
     {
       "term": "Bump allocator",
-      "definition": "The heap allocator Zesu uses inside a zkVM. It advances a cursor as memory is requested and never reclaims memory, which keeps the execution trace simpler and cheaper to prove."
+      "definition": "A heap allocator retained in the Zesu source; the free-list allocator is the default. It advances a cursor as memory is requested and never reclaims memory, which keeps the execution trace cheaper to prove but can exhaust the fixed guest heap."
     },
     {
       "term": "ELF object",
@@ -20,6 +20,10 @@
     {
       "term": "Execution witness",
       "definition": "A record of the chain state a block's transactions access, captured as Merkle proofs against the block's pre-state root. The execution client produces it and Zesu consumes it to re-execute a block without holding chain state."
+    },
+    {
+      "term": "Free-list allocator",
+      "definition": "The default heap allocator for the Zesu guest. It recycles freed memory within the fixed heap by keeping freed blocks on per-size-class lists, which prevents heap exhaustion on allocation-heavy blocks in exchange for a small proving-cost increase."
     },
     {
       "term": "Guest program",
