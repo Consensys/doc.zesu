@@ -58,7 +58,13 @@ On the `zesu.rv64im.o` guest build, Zesu defaults to a
 recycles freed memory within the heap region `[ZKVM_HEAP_POS, ZKVM_HEAP_TOP)`.
 
 The allocator is selected at build time, and the source also retains a simpler
-bump allocator that never reclaims memory. This affects only how the guest manages the heap.
+bump allocator that never reclaims memory.
+To use the bump allocator instead, build the guest object from source with that
+allocator wired in, or import the allocator you want when you embed Zesu's
+modules in your own build.
+The bump allocator can exhaust the fixed heap on large blocks, so the free-list
+allocator is the default and the recommended choice.
+Allocator selection affects only how the guest manages the heap.
 The host contract is unchanged, because the host still reserves the heap region
 that these two symbols describe.
 
