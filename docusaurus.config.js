@@ -291,7 +291,7 @@ const config = {
         hashed: true,
         indexBlog: false,
         askAi: {
-          project: "zesu",                 
+          project: "zesu",
           apiUrl: process.env.ASK_AI_API_URL || "http://localhost:5000/api/stream?api_key=....",
           hotkey: "cmd+k",
           texts: {
@@ -300,8 +300,8 @@ const config = {
               "Please do not input any of your own or another's personal information i.e, passwords, private keys, seed phrases, personal data, or other sensitive information. If you need support and do not want to engage with me, please reach out to us via Discord. Any information that you provide is not used for training my AI systems. For details on our data handling practices, see our Privacy Policy.\n\n" +
               "By proceeding you acknowledge the above.",
             inputPlaceholder: "Please ask a question",
-          }              
-        },        
+          }
+        },
       },
     ],
 
