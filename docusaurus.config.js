@@ -224,14 +224,14 @@ const config = {
     [
       "@docusaurus/plugin-google-gtag",
       {
-        trackingID: "G-",
+        trackingID: "G-8KF69V6XBG",
         anonymizeIP: true,
       },
     ],
     [
       "@docusaurus/plugin-google-tag-manager",
       {
-        containerId: "GTM-",
+        containerId: "GTM-PJ2X8WWH",
       },
     ],
     // This is how redirects are done
