@@ -18,7 +18,7 @@ jobs:
             "docs",            
           ]
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       - id: config
         name: Read ${{ matrix.version }}.json
         shell: bash
@@ -26,12 +26,12 @@ jobs:
           content=$(cat ./.github/config/${{ matrix.version }}.json | jq -r tostring)
           echo "configJSON=$content" >> $GITHUB_OUTPUT
       - name: Checkout algolia/docsearch-scraper
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           repository: algolia/docsearch-scraper
           path: "./algolia"
       - name: Set up Python
-        uses: actions/setup-python@v4.5.0
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
           python-version: "3.6"
       - name: Install pipenv
