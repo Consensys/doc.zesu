@@ -37,12 +37,15 @@ against `zesu.rv64im.o` to produce the final guest binary your zkVM runs.
 Linking conventions are platform-specific. Your zkVM target determines the linker script,
 entry point, heap layout, and accelerator wiring.
 
+Your entry point also calls Zesu's `main` symbol and maps its return value (`0` for
+success, non-zero for failure) to the zkVM's halt sequence.
+
 :::note
 The [`zesu-zkvm` repository](https://github.com/Consensys/zesu-zkvm) contains example
 integrations for the Zisk, OpenVM, and Linea zkVMs.
 It is a stop-gap for zkVMs that don't yet implement the common guest interface, and shows
 how to wire a non-compliant zkVM to Zesu.
-As zkVMs adopt the [zkVM standards](https://github.com/eth-act/zkvm-standards), they can
+As zkVMs adopt the [zkVM standards](https://github.com/eth-act/zkevm-standards), they can
 satisfy the symbol contract directly and the example integrations become unnecessary.
 :::
 

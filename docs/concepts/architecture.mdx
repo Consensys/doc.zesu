@@ -101,7 +101,7 @@ Zesu without a source dependency on this repository.
 The [`zesu-zkvm` repository](https://github.com/Consensys/zesu-zkvm) provides example
 integrations for the Zisk, OpenVM, and Linea zkVMs.
 It is a stop-gap for zkVMs that don't yet implement the
-[zkVM standards](https://github.com/eth-act/zkvm-standards); as they adopt the common
+[zkVM standards](https://github.com/eth-act/zkevm-standards); as they adopt the common
 interface, they can satisfy the symbol contract directly.
 The same source also builds as a native binary that runs on a host CPU without any zkVM,
 used for debugging execution against captured blocks and validating zkVM integrations
@@ -119,14 +119,19 @@ The extern references that zkVM hosts must satisfy fall into three categories.
 commitment back. The two I/O symbols (`read_input` and `write_output`) are the only channel
 between the guest and the host at runtime.
 
-- **Runtime**: execution environment support: logging, process termination, and the heap
-allocator's position and upper-bound variables. These let Zesu operate in a
-freestanding environment without an operating system.
+- **Runtime**: execution environment support: logging and the heap allocator's position
+and upper-bound variables. These let Zesu operate in a freestanding environment without
+an operating system.
 
 - **Accelerators**: EVM precompile operations (keccak256, secp256k1 recovery, BN254
 pairings, and so on) delegated to zkVM-native implementations where available.
 Hardware-accelerated precompiles reduce proof cost significantly for computationally
 expensive EVM operations.
+
+Termination sits outside the symbol contract.
+Zesu's `main` returns an exit status that the host entry point maps to the zkVM's halt
+sequence, following the
+[execution termination semantics standard](https://github.com/eth-act/zkevm-standards/tree/main/standards/standard-termination-semantics).
 
 See [zkVM symbol reference](../reference/zkvm-symbols.mdx) for the full symbol tables
 including signatures and descriptions.
