@@ -28,6 +28,9 @@ This keeps Ethereum Virtual Machine (EVM) logic separate from zkVM-specific inte
 code.
 
 The symbols fall into three categories: I/O, runtime, and accelerators.
+Termination isn't part of the symbol contract.
+Zesu returns an exit status to the host entry point instead, as described in
+[Exit status and panics](#exit-status-and-panics).
 
 ## I/O symbols
 
@@ -42,15 +45,14 @@ public output bytes.
 
 ## Runtime symbols
 
-Runtime symbols provide execution environment support for logging, process termination,
-and memory management.
+Runtime symbols provide execution environment support for logging and memory
+management.
 
-| Symbol          | Signature                       | Description                                            |
-|-----------------|---------------------------------|--------------------------------------------------------|
-| `zkvm_log`      | `(u8, [*]const u8, usize) void` | Log a message at the given level                       |
-| `zkvm_exit`     | `(i32) noreturn`                | Terminate execution with the given exit code           |
+| Symbol          | Signature                       | Description                                               |
+|-----------------|---------------------------------|-----------------------------------------------------------|
+| `zkvm_log`      | `(u8, [*]const u8, usize) void` | Log a message at the given level                          |
 | `ZKVM_HEAP_POS` | `usize` (var)                   | Heap cursor the allocator advances when it grows the heap |
-| `ZKVM_HEAP_TOP` | `usize` (var)                   | Heap upper bound the allocator must not exceed         |
+| `ZKVM_HEAP_TOP` | `usize` (var)                   | Heap upper bound the allocator must not exceed            |
 
 :::note
 On the `zesu.rv64im.o` guest build, Zesu defaults to a
@@ -68,6 +70,33 @@ Allocator selection affects only how the guest manages the heap.
 The host contract is unchanged, because the host still reserves the heap region
 that these two symbols describe.
 
+:::
+
+## Exit status and panics
+
+Zesu's exported `main` symbol follows the RISC-V C calling convention and returns a
+C `int` exit status in register `a0`: `0` on success and `1` on failure.
+Before returning `1`, Zesu logs the error name through `zkvm_log`.
+
+Your host entry point (`_start`, or the equivalent for your target) calls `main` and
+converts the returned value into the platform's halt sequence.
+The [`zesu-zkvm` repository](https://github.com/Consensys/zesu-zkvm) shows how the Zisk,
+OpenVM, and Linea integrations each do this.
+
+A Zig panic logs the panic message through `zkvm_log`, then executes the
+compiler-emitted `@trap()` builtin, which raises an illegal instruction.
+A panic doesn't return through `main`, so no exit status reaches your host entry point.
+
+This convention matches the
+[application entry point return value](https://github.com/eth-act/zkevm-standards/tree/main/standards/standard-termination-semantics#application-entry-point-return-value)
+rule in the execution termination semantics standard, which makes `_start` responsible
+for mapping the return value to the zkVM's termination mechanism.
+
+:::note
+Earlier Zesu releases required a `zkvm_exit` runtime symbol for termination.
+
+If your host object still defines `zkvm_exit`, the guest no longer calls it, and your
+entry point must honor the `main` return value instead.
 :::
 
 ## Accelerator symbols
