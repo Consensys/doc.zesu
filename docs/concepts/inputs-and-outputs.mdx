@@ -93,8 +93,7 @@ The four fields play distinct roles:
   [EIP-8282](https://eips.ethereum.org/EIPS/eip-8282)).
 - `witness` is the chain state Zesu needs to re-execute the payload's transactions without
   holding local state. See [Witness retrieval](./witness-retrieval.mdx) for details.
-- `chain_id` identifies the chain the payload belongs to. Zesu treats a `chain_id` of `0`
-  as `1` (Ethereum Mainnet).
+- `chain_id` identifies the chain the payload belongs to.
 - `public_keys` optionally contains one 64-byte uncompressed secp256k1 public key
   (no `0x04` prefix) for each transaction signer, in transaction order. When provided,
   the guest uses these keys instead of recovering signers from transaction signatures.
