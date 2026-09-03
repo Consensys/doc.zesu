@@ -60,8 +60,8 @@ which controls where it reads input bytes from when no input flag is provided.
 
 </Tabs>
 
-Overrides the fork name declared in the input's
-[`chain_config`](../concepts/inputs-and-outputs.mdx#the-stateless-input).
+Overrides the fork rules selected by the input's
+[schema ID](../concepts/inputs-and-outputs.mdx#the-schema-id-prefix).
 
 ### `ssz`
 
@@ -153,7 +153,7 @@ If `ZESU_INPUT` is not set, Zesu reads from standard input.
 
 ## Output streams
 
-Zesu writes its public output (the 105-byte SSZ commitment, or the JSON summary
+Zesu writes its public output (the 43-byte SSZ commitment, or the JSON summary
 for [`--json`](#json) input) to standard output.
 Diagnostic messages go to standard error.
 See [Inputs and outputs](../concepts/inputs-and-outputs.mdx) for the output

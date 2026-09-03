@@ -36,7 +36,7 @@ See [Witness retrieval](./witness-retrieval.mdx) for how Zesu retrieves the witn
 
 The prover node runs Zesu as a guest program inside a zkVM.
 Zesu receives a `StatelessInput` bundle via the zkVM's `read_input` interface, re-executes
-the block against the witness, and emits a 105-byte public commitment via `write_output`.
+the block against the witness, and emits a 43-byte public commitment via `write_output`.
 The zkVM then produces a proof that Zesu executed correctly.
 See [Inputs and outputs](./inputs-and-outputs.mdx) for the full I/O contract.
 
@@ -45,13 +45,12 @@ See [Inputs and outputs](./inputs-and-outputs.mdx) for the full I/O contract.
 The prover node wraps the proof and the public commitment into an `ExecutionProof`, signs
 it, and broadcasts it over the consensus layer p2p network as a `SignedExecutionProof`
 message on the `execution_proof` gossip topic, as defined by
-[EIP-8025](https://github.com/frisitano/EIPs/blob/d5653bc4d9b86997e069567dcd1eb8766b0c8a55/EIPS/eip-8025.md).
+[EIP-8025](https://eips.ethereum.org/EIPS/eip-8025).
 Proof-verifying nodes receive it via gossip and use the public commitment to confirm the
 proof covers the expected payload.
 
 :::warning
-EIP-8025 is in draft status and currently hosted on the spec author's fork rather than the
-canonical [`ethereum/EIPs`](https://github.com/ethereum/EIPs) repository.
+EIP-8025 is in draft status.
 The details described here may change as the spec evolves.
 :::
 
@@ -141,7 +140,7 @@ including signatures and descriptions.
 - [Obtain the guest program](../get-started/get-guest-program.mdx): download and
   integration steps for zkVM hosts.
 - [Inputs and outputs](./inputs-and-outputs.mdx): the `StatelessInput` structure and the
-  105-byte public commitment.
+  43-byte public commitment.
 - [Witness retrieval](./witness-retrieval.mdx): how Zesu obtains the witness it needs to
   re-execute a block.
 - [zkVM symbol reference](../reference/zkvm-symbols.mdx): complete tables of I/O, runtime,
