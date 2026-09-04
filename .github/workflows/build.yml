@@ -17,6 +17,6 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Build
-        uses: ConsenSys/github-actions/docs-build@7256f3d39c7bb71ec4ca9fc6078991302d4c8650
+        uses: Consensys-Incorporated/github-actions/docs-build@7256f3d39c7bb71ec4ca9fc6078991302d4c8650
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
